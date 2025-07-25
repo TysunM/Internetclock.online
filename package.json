@@ -6,12 +6,21 @@
   "main": "index.html",
   "scripts": {
     "start": "live-server --port=8080",
-    "deploy": "docker build -t internet-clock . && docker run -p 80:80 internet-clock"
+    "build": "npm run clean && npm run copy-files && npm run optimize",
+    "clean": "rm -rf dist",
+    "copy-files": "mkdir -p dist && cp -r *.html *.txt *.xml styles scripts assets dist/ 2>/dev/null || true",
+    "optimize": "echo 'Build complete! Static files ready for deployment in dist/ directory'",
+    "serve": "cd dist && python3 -m http.server 8000",
+    "deploy": "npm run build && echo 'Files ready for deployment in dist/ directory'",
+    "docker-build": "docker build -t internet-clock .",
+    "docker-run": "docker run -p 80:80 internet-clock",
+    "docker-deploy": "npm run docker-build && npm run docker-run"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/your-username/internet-clock.git"
+    "url": "git+https://github.com/TysunM/internet-clock.git"
   },
+  "homepage": "https://bigbigtime.com",
   "keywords": [
     "online clock",
     "digital clock",
@@ -22,7 +31,7 @@
     "pomodoro timer",
     "productivity"
   ],
-  "author": "Gemini AI",
+  "author": "TysunM",
   "license": "MIT",
   "devDependencies": {
     "live-server": "^1.2.2"
