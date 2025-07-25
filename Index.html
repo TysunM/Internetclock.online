@@ -1,159 +1,51 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="midnight-galaxy">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Online Clock Suite - Stopwatch, Timer, Alarm, World Clock | Internet Clock</title>
-    
-    <meta name="description" content="Ultimate free online clock with stopwatch, countdown timer, alarm clock, world time zones, and Pomodoro focus timer. The only clock website you'll ever need.">
-    <meta name="keywords" content="online clock, digital clock, stopwatch, timer, alarm clock, world clock, pomodoro timer, productivity tools, time management">
-    <meta name="author" content="Gemini AI">
-    <meta property="og:title" content="Internet Clock - The Ultimate Online Time Tool">
-    <meta property="og:description" content="A beautiful, all-in-one online clock with stopwatch, timer, alarm, world clock, and focus modes. The only clock you'll ever need.">
-    <meta property="og:image" content="assets/images/og-image.png">
-    <meta property="og:url" content="[Your website URL when deployed]">
-    <meta property="og:type" content="website">
-
-    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
-
+    <title>The Internet Clock</title>
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
 </head>
+
 <body>
+    <div class="container">
+        <!-- Top Banner Ad -->
+        <div class="ad-placeholder-top">Advertisement 728x90</div>
 
-    <div id="particles-js"></div>
-    <div class="ocean-waves">
-        <div class="wave"></div>
-        <div class="wave two"></div>
-    </div>
-    
-    <div class="page-wrapper">
-        <header class="ad-placeholder ad-header">Advertisement 728x90</header>
-        
-        <aside class="ad-sidebar-left">
-            <div class="ad-sidebar-container">
-                <div class="ad-placeholder ad-sidebar-box">Ad 200x200</div>
-                <div class="ad-placeholder ad-sidebar-box">Ad 200x200</div>
-            </div>
-        </aside>
-
-        <main class="main-content">
-            <h1>Internet Clock</h1>
-            <nav class="main-nav">
-                <button class="nav-btn" data-mode="big-clock-mode">BIG CLOCK</button>
-                <button class="nav-btn" data-mode="world-clock-mode">WORLD CLOCK</button>
-                <button class="nav-btn" data-mode="focus-mode">FOCUS</button>
-                <button class="nav-btn" data-mode="alarm-clock-mode">ALARM CLOCK</button>
-                <button class="nav-btn" data-mode="timer-mode">TIMER</button>
-                <button class="nav-btn" data-mode="stopwatch-mode">STOP WATCH</button>
+        <header>
+            <h1>The Internet Clock</h1>
+            <nav>
+                <button id="big-clock-btn" class="nav-btn">Big Clock</button>
+                <button id="world-clock-btn" class="nav-btn">World Clock</button>
+                <button id="stopwatch-btn" class="nav-btn">Stopwatch</button>
+                <button id="focus-mode-btn" class="nav-btn">Focus (Pomodoro)</button>
+                <button id="alarm-clock-btn" class="nav-btn">Alarm Clock</button>
+                <button id="timer-btn" class="nav-btn">Timer</button>
             </nav>
+        </header>
 
-            <div id="big-clock-mode" class="mode-content">
-                <h2 class="date-display" id="current-date"></h2>
-                <div class="time-display" id="main-clock"></div>
-                <div class="timezone-display" id="timezone-info"></div>
-            </div>
-
-            <div id="world-clock-mode" class="mode-content">
-                <div class="local-time-container">
-                    <p>Local Time</p>
-                    <div class="time-display small" id="world-clock-local"></div>
-                </div>
-                <div id="world-clocks-grid"></div>
-            </div>
-
-            <div id="focus-mode" class="mode-content">
-                <h2 id="focus-status-text">Time to Focus!</h2>
-                <div class="time-display" id="focus-display">25:00</div>
-                <div class="progress-bar-container"><div class="progress-bar"><div id="progress-bar-inner"></div></div></div>
-                <div class="session-counter" id="session-counter-display">Session 1 / 4</div>
-                <div class="stopwatch-controls">
-                    <button class="stopwatch-btn" id="focus-start-pause-btn">START</button>
-                    <button class="stopwatch-btn" id="focus-reset-btn">RESET</button>
-                </div>
-            </div>
-
-            <div id="alarm-clock-mode" class="mode-content">
-                <div class="alarm-form-container">
-                    <h3>Set a New Alarm</h3>
-                    <form id="alarm-form">
-                        <input type="time" id="alarm-time-input" required>
-                        <input type="text" id="alarm-label-input" placeholder="Alarm label (e.g., Wake Up)">
-                        <button type="submit" class="ui-button">Add Alarm</button>
-                    </form>
-                </div>
-                <div id="alarms-list"></div>
-            </div>
-
-            <div id="timer-mode" class="mode-content">
-                <div class="time-display" id="timer-display">00:00</div>
-                <div class="timer-inputs">
-                    <input type="number" id="timer-minutes-input" placeholder="MM" min="0" max="99">
-                    <span>:</span>
-                    <input type="number" id="timer-seconds-input" placeholder="SS" min="0" max="59">
-                </div>
-                <div class="timer-presets">
-                    <button class="preset-btn" data-minutes="1">1m</button>
-                    <button class="preset-btn" data-minutes="5">5m</button>
-                    <button class="preset-btn" data-minutes="10">10m</button>
-                    <button class="preset-btn" data-minutes="30">30m</button>
-                </div>
-                <div class="stopwatch-controls">
-                    <button class="stopwatch-btn" id="timer-start-pause-btn">START</button>
-                    <button class="stopwatch-btn" id="timer-reset-btn">RESET</button>
-                </div>
-            </div>
-
-            <div id="stopwatch-mode" class="mode-content">
-                <div class="time-display" id="stopwatch-display">00:00:00.00</div>
-                 <div class="stopwatch-controls">
-                    <button class="stopwatch-btn" id="startStopBtn">START</button>
-                    <button class="stopwatch-btn" id="lapBtn">LAP</button>
-                    <button class="stopwatch-btn" id="resetBtn">RESET</button>
-                </div>
-                <div id="laps-container"></div>
-            </div>
-
+        <main id="main-content">
+            <!-- All clock modes, including their Start/Stop/Reset buttons,
+                 will be dynamically loaded into this area by app.js -->
         </main>
-        
-        <aside class="ad-sidebar-right">
-            <div class="ad-sidebar-container">
-                <div class="ad-placeholder ad-sidebar-box">Ad 200x200</div>
-                <div class="ad-placeholder ad-sidebar-box">Ad 200x200</div>
+
+        <footer>
+            <!-- Bottom Settings Bar -->
+            <div class="settings-bar">
+                 <button id="settings-btn" class="settings-btn">Settings</button>
+                 <button id="themes-btn" class="settings-btn">Themes</button>
+                 <button id="sounds-btn" class="settings-btn">Alarm Sounds</button>
+                 <button id="music-btn" class="settings-btn">Music</button>
             </div>
-        </aside>
-
-        <footer class="ad-placeholder ad-footer">Advertisement 728x90</footer>
+            <!-- Bottom Banner Ad -->
+            <div class="ad-placeholder-bottom">Advertisement 728x90</div>
+        </footer>
     </div>
 
-    <div class="bottom-controls">
-        <button class="control-btn" id="settingsBtn" aria-label="Settings">⚙️</button>
-        <button class="control-btn" id="soundBtn" aria-label="Sound Controls">🔊</button>
-        <button class="control-btn" id="themeBtn" aria-label="Change Theme">🌓</button>
-        <button class="control-btn" id="fullscreenBtn" aria-label="Toggle Fullscreen">⛶</button>
-        <button class="control-btn" id="shareBtn" aria-label="Share">📤</button>
-    </div>
-
-    <div id="settingsModal" class="modal-overlay">...</div>
-    <div id="themeModal" class="modal-overlay">...</div>
-    <div id="soundModal" class="modal-overlay">...</div>
-    <div id="shareModal" class="modal-overlay">...</div>
-
-    <div id="alarm-ringing-modal" class="modal-overlay">
-        <div class="modal-content">
-            <h2 class="modal-title" id="ringing-alarm-label">ALARM!</h2>
-            <div class="time-display" id="ringing-alarm-time"></div>
-            <div class="stopwatch-controls">
-                <button id="snooze-btn" class="ui-button">Snooze (5 min)</button>
-                <button id="dismiss-alarm-btn" class="ui-button stop">Dismiss</button>
-            </div>
-        </div>
-    </div>
-
-
-    <footer class="app-footer">
-        The Internet Clock - Tysun Mic
-    </footer>
-
-    <script src="scripts/app.js" defer></script>
+    <!-- The fully functional JavaScript file -->
+    <script src="scripts/app.js"></script>
 </body>
+
 </html>
