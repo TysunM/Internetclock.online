@@ -380,13 +380,13 @@ document.addEventListener('DOMContentLoaded', () => {
         dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
     });
 
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-        const dropdown = document.getElementById('settings-dropdown');
-        if (dropdown && !settingsBtn.contains(e.target) && !dropdown.contains(e.target)) {
-            dropdown.style.display = 'none';
-        }
-    });
+   // Close themes dropdown when clicking outside
+   document.addEventListener('click', (e) => {
+       const dropdown = document.getElementById('themes-dropdown');
+       const themesBtn = document.getElementById('themes-btn');
+       if (dropdown && !themesBtn.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.style.display = 'none';
+    }
 
     // Other settings buttons
     document.getElementById('themes-btn').addEventListener('click', () => {
@@ -407,19 +407,12 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Background music feature coming soon! Focus-enhancing soundscapes.');
     });
 
-    // Close dropdowns when clicking outside
+    // Close themes dropdown when clicking outside
     document.addEventListener('click', (e) => {
-        const settingsDropdown = document.getElementById('settings-dropdown');
-        const themesDropdown = document.getElementById('themes-dropdown');
-        const settingsBtn = document.getElementById('settings-btn');
+        const dropdown = document.getElementById('themes-dropdown');
         const themesBtn = document.getElementById('themes-btn');
-        
-        if (settingsDropdown && !settingsBtn.contains(e.target) && !settingsDropdown.contains(e.target)) {
-            settingsDropdown.style.display = 'none';
-        }
-        
-        if (themesDropdown && !themesBtn.contains(e.target) && !themesDropdown.contains(e.target)) {
-            themesDropdown.style.display = 'none';
+        if (dropdown && !themesBtn.contains(e.target) && !dropdown.contains(e.target)) {
+           dropdown.style.display = 'none';
         }
     });
 
@@ -651,4 +644,16 @@ function loadSavedTheme() {
             console.log('Error loading saved theme:', e);
         }
     }
-}
+   function updateThemesButtonHandler() {
+    const themesBtn = document.getElementById('themes-btn');
+    themesBtn.removeEventListener('click', themesBtn.onclick); // Remove old handler
+    
+    themesBtn.addEventListener('click', () => {
+        let dropdown = document.getElementById('themes-dropdown');
+        if (!dropdown) {
+            dropdown = createThemesDropdown();
+        }
+        // Toggle dropdown visibility
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    });
+  }
