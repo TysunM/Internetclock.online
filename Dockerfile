@@ -1,17 +1,3 @@
-# Multi-stage build for Internet Clock Online
-FROM node:lts-alpine AS builder
-
-# Set working directory
-WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies
-RUN npm ci --only=production
-
-# Copy source files
-COPY . .
 
 # Build the application
 RUN npm run build
