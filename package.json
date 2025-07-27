@@ -1,12 +1,14 @@
 {
   "name": "internet-clock-online",
   "version": "1.0.0",
-  "description": "Ultimate free online clock with stopwatch, countdown timer, alarm clock, world time zones, and Pomodoro focus timer. The only clock websi>  "private": true,
+  "description": "Ultimate free online clock with stopwatch, countdown timer, alarm clock, world time zones, and Pomodoro focus timer. The only clock website you'll ever need.",
+  "private": true,
   "main": "index.html",
   "scripts": {
     "start": "live-server --port=8080",
     "build": "bash ./build.sh",
-    "build-manual": "rm -rf dist && mkdir -p dist && cp Index.html dist/index.html && cp -r styles scripts assets dist/ 2>/dev/null || true && cp robots.tx>    "clean": "rm -rf dist",
+    "build-manual": "rm -rf dist && mkdir -p dist && cp Index.html dist/index.html && cp -r styles scripts assets dist/ 2>/dev/null || true && cp robots.txt sitemap.xml dist/ 2>/dev/null || true",
+    "clean": "rm -rf dist",
     "serve": "cd dist && python3 -m http.server 8000",
     "deploy": "npm run build && echo 'Files ready for deployment in dist/ directory'",
     "test-local": "npm run build && npm run serve",
