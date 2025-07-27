@@ -36,18 +36,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setTheme(mode) {
-        // Remove all mode classes
         document.body.className = '';
-        // Add the new mode class
         document.body.classList.add(`${mode}-mode`);
     }
 
     function hideAllControls() {
-        worldCities.style.display = 'none';
-        timerControls.style.display = 'none';
-        timerInputs.style.display = 'none';
-        alarmControls.style.display = 'none';
-        secondaryInfo.style.display = 'block';
+        if (worldCities) worldCities.style.display = 'none';
+        if (timerControls) timerControls.style.display = 'none';
+        if (timerInputs) timerInputs.style.display = 'none';
+        if (alarmControls) alarmControls.style.display = 'none';
+        if (secondaryInfo) secondaryInfo.style.display = 'block';
     }
 
     function clearActiveInterval() {
@@ -65,17 +63,16 @@ document.addEventListener('DOMContentLoaded', () => {
             init: function() {
                 setTheme('timer');
                 hideAllControls();
-                timerInputs.style.display = 'flex';
-                timerControls.style.display = 'flex';
+                if (timerInputs) timerInputs.style.display = 'flex';
+                if (timerControls) timerControls.style.display = 'flex';
                 
-                // Get timer values
-                const hours = parseInt(document.getElementById('hours-input').value) || 0;
-                const minutes = parseInt(document.getElementById('minutes-input').value) || 25;
-                const seconds = parseInt(document.getElementById('seconds-input').value) || 0;
+                const hours = parseInt(document.getElementById('hours-input')?.value) || 0;
+                const minutes = parseInt(document.getElementById('minutes-input')?.value) || 25;
+                const seconds = parseInt(document.getElementById('seconds-input')?.value) || 0;
                 
                 timerTime = hours * 3600 + minutes * 60 + seconds;
-                timeDigits.textContent = formatTimeWithColon(timerTime);
-                timePeriod.style.display = 'none';
+                if (timeDigits) timeDigits.textContent = formatTimeWithColon(timerTime);
+                if (timePeriod) timePeriod.style.display = 'none';
                 
                 this.setupControls();
             },
@@ -83,46 +80,50 @@ document.addEventListener('DOMContentLoaded', () => {
                 const startBtn = document.getElementById('start-btn');
                 const stopBtn = document.getElementById('stop-btn');
                 
-                startBtn.textContent = 'START';
-                stopBtn.textContent = 'STOP';
+                if (startBtn) {
+                    startBtn.textContent = 'START';
+                    startBtn.onclick = () => {
+                        if (!isRunning && timerTime > 0) {
+                            isRunning = true;
+                            activeInterval = setInterval(() => {
+                                timerTime--;
+                                if (timeDigits) timeDigits.textContent = formatTimeWithColon(timerTime);
+                                
+                                if (timerTime <= 0) {
+                                    clearActiveInterval();
+                                    alert("Time's up!");
+                                }
+                            }, 1000);
+                        }
+                    };
+                }
                 
-                startBtn.onclick = () => {
-                    if (!isRunning && timerTime > 0) {
-                        isRunning = true;
-                        activeInterval = setInterval(() => {
-                            timerTime--;
-                            timeDigits.textContent = formatTimeWithColon(timerTime);
-                            
-                            if (timerTime <= 0) {
-                                clearActiveInterval();
-                                alert("Time's up!");
-                            }
-                        }, 1000);
-                    }
-                };
-                
-                stopBtn.onclick = () => {
-                    clearActiveInterval();
-                    // Reset to input values
-                    const hours = parseInt(document.getElementById('hours-input').value) || 0;
-                    const minutes = parseInt(document.getElementById('minutes-input').value) || 25;
-                    const seconds = parseInt(document.getElementById('seconds-input').value) || 0;
-                    timerTime = hours * 3600 + minutes * 60 + seconds;
-                    timeDigits.textContent = formatTimeWithColon(timerTime);
-                };
+                if (stopBtn) {
+                    stopBtn.textContent = 'STOP';
+                    stopBtn.onclick = () => {
+                        clearActiveInterval();
+                        const hours = parseInt(document.getElementById('hours-input')?.value) || 0;
+                        const minutes = parseInt(document.getElementById('minutes-input')?.value) || 25;
+                        const seconds = parseInt(document.getElementById('seconds-input')?.value) || 0;
+                        timerTime = hours * 3600 + minutes * 60 + seconds;
+                        if (timeDigits) timeDigits.textContent = formatTimeWithColon(timerTime);
+                    };
+                }
 
-                // Update timer when inputs change
                 const inputs = ['hours-input', 'minutes-input', 'seconds-input'];
                 inputs.forEach(id => {
-                    document.getElementById(id).addEventListener('input', () => {
-                        if (!isRunning) {
-                            const hours = parseInt(document.getElementById('hours-input').value) || 0;
-                            const minutes = parseInt(document.getElementById('minutes-input').value) || 25;
-                            const seconds = parseInt(document.getElementById('seconds-input').value) || 0;
-                            timerTime = hours * 3600 + minutes * 60 + seconds;
-                            timeDigits.textContent = formatTimeWithColon(timerTime);
-                        }
-                    });
+                    const input = document.getElementById(id);
+                    if (input) {
+                        input.addEventListener('input', () => {
+                            if (!isRunning) {
+                                const hours = parseInt(document.getElementById('hours-input')?.value) || 0;
+                                const minutes = parseInt(document.getElementById('minutes-input')?.value) || 25;
+                                const seconds = parseInt(document.getElementById('seconds-input')?.value) || 0;
+                                timerTime = hours * 3600 + minutes * 60 + seconds;
+                                if (timeDigits) timeDigits.textContent = formatTimeWithColon(timerTime);
+                            }
+                        });
+                    }
                 });
             }
         },
@@ -132,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
             init: function() {
                 setTheme('big-clock');
                 hideAllControls();
-                timePeriod.style.display = 'block';
+                if (timePeriod) timePeriod.style.display = 'block';
                 
                 this.updateClock();
                 activeInterval = setInterval(() => this.updateClock(), 1000);
@@ -142,19 +143,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 let hours = now.getHours();
                 const minutes = now.getMinutes().toString().padStart(2, '0');
                 const seconds = now.getSeconds().toString().padStart(2, '0');
-                const ampm = hours >= 12 ? 'AM' : 'AM';
+                const ampm = hours >= 12 ? 'PM' : 'AM';
                 
-                // Convert to 12 hour format
                 hours = hours % 12;
                 hours = hours ? hours : 12;
                 hours = hours.toString().padStart(2, '0');
                 
-                timeDigits.textContent = `${hours}:${minutes}:${seconds}`;
-                timePeriod.textContent = ampm;
+                if (timeDigits) timeDigits.textContent = `${hours}:${minutes}:${seconds}`;
+                if (timePeriod) timePeriod.textContent = ampm;
                 
-                // Update timezone info
                 const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                document.querySelector('.location-zone').textContent = `LOCATION (${timezone.replace(/_/g, ' ')})`;
+                const locationZone = document.querySelector('.location-zone');
+                if (locationZone) {
+                    locationZone.textContent = `LOCATION (${timezone.replace(/_/g, ' ')})`;
+                }
             }
         },
 
@@ -163,8 +165,8 @@ document.addEventListener('DOMContentLoaded', () => {
             init: function() {
                 setTheme('world-clock');
                 hideAllControls();
-                worldCities.style.display = 'flex';
-                timePeriod.style.display = 'block';
+                if (worldCities) worldCities.style.display = 'flex';
+                if (timePeriod) timePeriod.style.display = 'block';
                 
                 this.updateWorldClock();
                 activeInterval = setInterval(() => this.updateWorldClock(), 1000);
@@ -172,26 +174,27 @@ document.addEventListener('DOMContentLoaded', () => {
             updateWorldClock: function() {
                 const now = new Date();
                 
-                // Local time
                 let hours = now.getHours();
                 const minutes = now.getMinutes().toString().padStart(2, '0');
                 const seconds = now.getSeconds().toString().padStart(2, '0');
-                const ampm = hours >= 12 ? 'AM' : 'AM';
+                const ampm = hours >= 12 ? 'PM' : 'AM';
                 
                 hours = hours % 12;
                 hours = hours ? hours : 12;
                 hours = hours.toString().padStart(2, '0');
                 
-                timeDigits.textContent = `${hours}:${minutes}:${seconds}`;
-                timePeriod.textContent = ampm;
+                if (timeDigits) timeDigits.textContent = `${hours}:${minutes}:${seconds}`;
+                if (timePeriod) timePeriod.textContent = ampm;
                 
-                // Update city times (simplified - all showing same time for now)
                 const cityClocks = document.querySelectorAll('.city-clock');
                 cityClocks.forEach(clock => {
                     clock.textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
                 });
                 
-                document.querySelector('.location-zone').textContent = 'LOCAL TIME';
+                const locationZone = document.querySelector('.location-zone');
+                if (locationZone) {
+                    locationZone.textContent = 'LOCAL TIME';
+                }
             }
         },
 
@@ -200,15 +203,17 @@ document.addEventListener('DOMContentLoaded', () => {
             init: function() {
                 setTheme('focus');
                 hideAllControls();
-                timerControls.style.display = 'flex';
-                timePeriod.style.display = 'none';
+                if (timerControls) timerControls.style.display = 'flex';
+                if (timePeriod) timePeriod.style.display = 'none';
                 
-                // Default 25 minute focus session
                 timerTime = 25 * 60;
-                timeDigits.textContent = formatTimeWithColon(timerTime);
+                if (timeDigits) timeDigits.textContent = formatTimeWithColon(timerTime);
                 
-                modeTitle.textContent = 'TODAYS DATE';
-                document.querySelector('.location-zone').textContent = 'LOCATION (TIME ZONE)';
+                if (modeTitle) modeTitle.textContent = 'TODAYS DATE';
+                const locationZone = document.querySelector('.location-zone');
+                if (locationZone) {
+                    locationZone.textContent = 'LOCATION (TIME ZONE)';
+                }
                 
                 this.setupControls();
             },
@@ -216,31 +221,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 const startBtn = document.getElementById('start-btn');
                 const stopBtn = document.getElementById('stop-btn');
                 
-                startBtn.textContent = 'START';
-                stopBtn.textContent = 'STOP';
+                if (startBtn) {
+                    startBtn.textContent = 'START';
+                    startBtn.onclick = () => {
+                        if (!isRunning && timerTime > 0) {
+                            isRunning = true;
+                            activeInterval = setInterval(() => {
+                                timerTime--;
+                                if (timeDigits) timeDigits.textContent = formatTimeWithColon(timerTime);
+                                
+                                if (timerTime <= 0) {
+                                    clearActiveInterval();
+                                    alert("Focus session complete!");
+                                    timerTime = 25 * 60;
+                                    if (timeDigits) timeDigits.textContent = formatTimeWithColon(timerTime);
+                                }
+                            }, 1000);
+                        }
+                    };
+                }
                 
-                startBtn.onclick = () => {
-                    if (!isRunning && timerTime > 0) {
-                        isRunning = true;
-                        activeInterval = setInterval(() => {
-                            timerTime--;
-                            timeDigits.textContent = formatTimeWithColon(timerTime);
-                            
-                            if (timerTime <= 0) {
-                                clearActiveInterval();
-                                alert("Focus session complete!");
-                                timerTime = 25 * 60; // Reset to 25 minutes
-                                timeDigits.textContent = formatTimeWithColon(timerTime);
-                            }
-                        }, 1000);
-                    }
-                };
-                
-                stopBtn.onclick = () => {
-                    clearActiveInterval();
-                    timerTime = 25 * 60; // Reset to 25 minutes
-                    timeDigits.textContent = formatTimeWithColon(timerTime);
-                };
+                if (stopBtn) {
+                    stopBtn.textContent = 'STOP';
+                    stopBtn.onclick = () => {
+                        clearActiveInterval();
+                        timerTime = 25 * 60;
+                        if (timeDigits) timeDigits.textContent = formatTimeWithColon(timerTime);
+                    };
+                }
             }
         },
 
@@ -249,13 +257,16 @@ document.addEventListener('DOMContentLoaded', () => {
             init: function() {
                 setTheme('stopwatch');
                 hideAllControls();
-                timerControls.style.display = 'flex';
-                timePeriod.style.display = 'none';
+                if (timerControls) timerControls.style.display = 'flex';
+                if (timePeriod) timePeriod.style.display = 'none';
                 
                 stopwatchTime = 0;
-                timeDigits.textContent = formatTimeWithColon(stopwatchTime);
+                if (timeDigits) timeDigits.textContent = formatTimeWithColon(stopwatchTime);
                 
-                document.querySelector('.location-zone').textContent = 'LOCATION (TIME ZONE)';
+                const locationZone = document.querySelector('.location-zone');
+                if (locationZone) {
+                    locationZone.textContent = 'LOCATION (TIME ZONE)';
+                }
                 
                 this.setupControls();
             },
@@ -263,25 +274,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 const startBtn = document.getElementById('start-btn');
                 const stopBtn = document.getElementById('stop-btn');
                 
-                startBtn.textContent = 'START';
-                stopBtn.textContent = 'STOP';
+                if (startBtn) {
+                    startBtn.textContent = 'START';
+                    startBtn.onclick = () => {
+                        if (!isRunning) {
+                            isRunning = true;
+                            stopwatchStartTime = Date.now() - (stopwatchTime * 1000);
+                            activeInterval = setInterval(() => {
+                                stopwatchTime = Math.floor((Date.now() - stopwatchStartTime) / 1000);
+                                if (timeDigits) timeDigits.textContent = formatTimeWithColon(stopwatchTime);
+                            }, 100);
+                        }
+                    };
+                }
                 
-                startBtn.onclick = () => {
-                    if (!isRunning) {
-                        isRunning = true;
-                        stopwatchStartTime = Date.now() - (stopwatchTime * 1000);
-                        activeInterval = setInterval(() => {
-                            stopwatchTime = Math.floor((Date.now() - stopwatchStartTime) / 1000);
-                            timeDigits.textContent = formatTimeWithColon(stopwatchTime);
-                        }, 100);
-                    }
-                };
-                
-                stopBtn.onclick = () => {
-                    clearActiveInterval();
-                    stopwatchTime = 0;
-                    timeDigits.textContent = formatTimeWithColon(stopwatchTime);
-                };
+                if (stopBtn) {
+                    stopBtn.textContent = 'STOP';
+                    stopBtn.onclick = () => {
+                        clearActiveInterval();
+                        stopwatchTime = 0;
+                        if (timeDigits) timeDigits.textContent = formatTimeWithColon(stopwatchTime);
+                    };
+                }
             }
         },
 
@@ -290,8 +304,8 @@ document.addEventListener('DOMContentLoaded', () => {
             init: function() {
                 setTheme('alarm');
                 hideAllControls();
-                alarmControls.style.display = 'block';
-                timePeriod.style.display = 'none';
+                if (alarmControls) alarmControls.style.display = 'block';
+                if (timePeriod) timePeriod.style.display = 'none';
                 
                 this.updateClock();
                 activeInterval = setInterval(() => this.updateClock(), 1000);
@@ -308,22 +322,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 hours = hours ? hours : 12;
                 hours = hours.toString().padStart(2, '0');
                 
-                timeDigits.textContent = `${hours}:${minutes}:${seconds}`;
+                if (timeDigits) timeDigits.textContent = `${hours}:${minutes}:${seconds}`;
                 
                 const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                document.querySelector('.location-zone').textContent = `LOCATION (${timezone.replace(/_/g, ' ')})`;
+                const locationZone = document.querySelector('.location-zone');
+                if (locationZone) {
+                    locationZone.textContent = `LOCATION (${timezone.replace(/_/g, ' ')})`;
+                }
             },
             setupControls: function() {
                 const setAlarmBtn = document.getElementById('set-alarm-btn');
-                setAlarmBtn.onclick = () => {
-                    const alarmTime = prompt("Set alarm time (HH:MM format, e.g., 07:30):");
-                    if (alarmTime && alarmTime.match(/^\d{1,2}:\d{2}$/)) {
-                        alert(`Alarm set for ${alarmTime}! You will be notified when the time arrives.`);
-                        // In production, this would set an actual alarm
-                    } else if (alarmTime) {
-                        alert("Please enter time in HH:MM format (e.g., 07:30)");
-                    }
-                };
+                if (setAlarmBtn) {
+                    setAlarmBtn.onclick = () => {
+                        const alarmTime = prompt("Set alarm time (HH:MM format, e.g., 07:30):");
+                        if (alarmTime && alarmTime.match(/^\d{1,2}:\d{2}$/)) {
+                            alert(`Alarm set for ${alarmTime}! You will be notified when the time arrives.`);
+                        } else if (alarmTime) {
+                            alert("Please enter time in HH:MM format (e.g., 07:30)");
+                        }
+                    };
+                }
             }
         }
     };
@@ -333,14 +351,12 @@ document.addEventListener('DOMContentLoaded', () => {
         clearActiveInterval();
         currentMode = modeName;
         
-        // Update active button
         breadcrumbBtns.forEach(btn => btn.classList.remove('active'));
         const activeBtn = document.querySelector(`[data-mode="${modeName}"]`);
         if (activeBtn) activeBtn.classList.add('active');
         
-        // Update title and initialize mode
         if (modes[modeName]) {
-            modeTitle.textContent = modes[modeName].title;
+            if (modeTitle) modeTitle.textContent = modes[modeName].title;
             modes[modeName].init();
         }
     }
@@ -355,64 +371,72 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Settings dropdown functionality
     const settingsBtn = document.getElementById('settings-btn');
-    settingsBtn.addEventListener('click', () => {
-        // Create dropdown if it doesn't exist
-        let dropdown = document.getElementById('settings-dropdown');
-        if (!dropdown) {
-            dropdown = document.createElement('div');
-            dropdown.id = 'settings-dropdown';
-            dropdown.className = 'settings-dropdown';
-            dropdown.innerHTML = `
-                <div class="dropdown-content">
-                    <h3>Contact Support</h3>
-                    <p>For technical issues or feedback:</p>
-                    <a href="mailto:tserver@internetclock.online">tserver@internetclock.online</a>
-                    <hr>
-                    <div class="dropdown-item" onclick="alert('Theme customization coming soon!')">Customize Themes</div>
-                    <div class="dropdown-item" onclick="alert('Sound settings coming soon!')">Sound Settings</div>
-                    <div class="dropdown-item" onclick="alert('Display preferences coming soon!')">Display Options</div>
-                </div>
-            `;
-            document.body.appendChild(dropdown);
-        }
-        
-        // Toggle dropdown visibility
-        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-    });
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', () => {
+            let dropdown = document.getElementById('settings-dropdown');
+            if (!dropdown) {
+                dropdown = document.createElement('div');
+                dropdown.id = 'settings-dropdown';
+                dropdown.className = 'settings-dropdown';
+                dropdown.innerHTML = `
+                    <div class="dropdown-content">
+                        <h3>Contact Support</h3>
+                        <p>For technical issues or feedback:</p>
+                        <a href="mailto:tserver@internetclock.online">tserver@internetclock.online</a>
+                        <hr>
+                        <div class="dropdown-item" onclick="alert('Theme customization coming soon!')">Customize Themes</div>
+                        <div class="dropdown-item" onclick="alert('Sound settings coming soon!')">Sound Settings</div>
+                        <div class="dropdown-item" onclick="alert('Display preferences coming soon!')">Display Options</div>
+                    </div>
+                `;
+                document.body.appendChild(dropdown);
+            }
+            
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+    }
 
-   // Close themes dropdown when clicking outside
-   document.addEventListener('click', (e) => {
-       const dropdown = document.getElementById('themes-dropdown');
-       const themesBtn = document.getElementById('themes-btn');
-       if (dropdown && !themesBtn.contains(e.target) && !dropdown.contains(e.target)) {
-        dropdown.style.display = 'none';
+    // Themes functionality
+    const themesBtn = document.getElementById('themes-btn');
+    if (themesBtn) {
+        themesBtn.addEventListener('click', () => {
+            let dropdown = document.getElementById('themes-dropdown');
+            if (!dropdown) {
+                dropdown = createThemesDropdown();
+            }
+            
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
     }
 
     // Other settings buttons
-    document.getElementById('themes-btn').addEventListener('click', () => {
-        let dropdown = document.getElementById('themes-dropdown');
-        if (!dropdown) {
-            dropdown = createThemesDropdown();
+    const soundsBtn = document.getElementById('sounds-btn');
+    if (soundsBtn) {
+        soundsBtn.addEventListener('click', () => {
+            alert('Alarm sounds library coming soon! Professional quality audio.');
+        });
+    }
+
+    const musicBtn = document.getElementById('music-btn');
+    if (musicBtn) {
+        musicBtn.addEventListener('click', () => {
+            alert('Background music feature coming soon! Focus-enhancing soundscapes.');
+        });
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+        const settingsDropdown = document.getElementById('settings-dropdown');
+        const themesDropdown = document.getElementById('themes-dropdown');
+        const settingsBtn = document.getElementById('settings-btn');
+        const themesBtn = document.getElementById('themes-btn');
+        
+        if (settingsDropdown && settingsBtn && !settingsBtn.contains(e.target) && !settingsDropdown.contains(e.target)) {
+            settingsDropdown.style.display = 'none';
         }
         
-        // Toggle dropdown visibility
-        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-    });
-
-    document.getElementById('sounds-btn').addEventListener('click', () => {
-        alert('Alarm sounds library coming soon! Professional quality audio.');
-    });
-
-    document.getElementById('music-btn').addEventListener('click', () => {
-        alert('Background music feature coming soon! Focus-enhancing soundscapes.');
-    });
-
-    // Close themes dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-        const dropdown = document.getElementById('themes-dropdown');
-        const themesBtn = document.getElementById('themes-btn');
-        if (dropdown && !themesBtn.contains(e.target) && !dropdown.contains(e.target)) {
-           dropdown.style.display = 'none';
+        if (themesDropdown && themesBtn && !themesBtn.contains(e.target) && !themesDropdown.contains(e.target)) {
+            themesDropdown.style.display = 'none';
         }
     });
 
@@ -471,15 +495,15 @@ const themesData = {
         backgrounds: [
             {
                 name: 'Polygon Network',
-                css: `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`
+                css: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
             },
             {
                 name: 'Hexagon Pattern',
-                css: `radial-gradient(circle at 50% 50%, #ff6b6b 0%, #4ecdc4 50%, #45b7d1 100%)`
+                css: 'radial-gradient(circle at 50% 50%, #ff6b6b 0%, #4ecdc4 50%, #45b7d1 100%)'
             },
             {
                 name: 'Triangle Mosaic',
-                css: `linear-gradient(60deg, #f093fb 0%, #f5576c 100%)`
+                css: 'linear-gradient(60deg, #f093fb 0%, #f5576c 100%)'
             }
         ]
     },
@@ -644,16 +668,4 @@ function loadSavedTheme() {
             console.log('Error loading saved theme:', e);
         }
     }
-   function updateThemesButtonHandler() {
-    const themesBtn = document.getElementById('themes-btn');
-    themesBtn.removeEventListener('click', themesBtn.onclick); // Remove old handler
-    
-    themesBtn.addEventListener('click', () => {
-        let dropdown = document.getElementById('themes-dropdown');
-        if (!dropdown) {
-            dropdown = createThemesDropdown();
-        }
-        // Toggle dropdown visibility
-        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-    });
-  }
+}
