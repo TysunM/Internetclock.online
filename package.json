@@ -1,26 +1,26 @@
 {
-  "name": "internet-clock",
+  "name": "internet-clock-online",
   "version": "1.0.0",
   "description": "Ultimate free online clock with stopwatch, countdown timer, alarm clock, world time zones, and Pomodoro focus timer. The only clock website you'll ever need.",
   "private": true,
   "main": "index.html",
   "scripts": {
     "start": "live-server --port=8080",
-    "build": "npm run clean && npm run copy-files && npm run optimize",
+    "build": "./build.sh",
+    "build-manual": "rm -rf dist && mkdir -p dist && cp -r *.html *.txt *.xml styles scripts assets dist/ && [ -f dist/Index.html ] && mv dist/Index.html dist/index.html || true",
     "clean": "rm -rf dist",
-    "copy-files": "mkdir -p dist && cp -r *.html *.txt *.xml styles scripts assets dist/ 2>/dev/null || true",
-    "optimize": "echo 'Build complete! Static files ready for deployment in dist/ directory'",
     "serve": "cd dist && python3 -m http.server 8000",
     "deploy": "npm run build && echo 'Files ready for deployment in dist/ directory'",
-    "docker-build": "docker build -t internet-clock .",
-    "docker-run": "docker run -p 80:80 internet-clock",
+    "test-local": "npm run build && npm run serve",
+    "docker-build": "docker build -t internetclock-online .",
+    "docker-run": "docker run -p 80:80 internetclock-online",
     "docker-deploy": "npm run docker-build && npm run docker-run"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TysunM/internet-clock.git"
   },
-  "homepage": "https://bigbigtime.com",
+  "homepage": "https://internetclock.online",
   "keywords": [
     "online clock",
     "digital clock",
@@ -29,7 +29,10 @@
     "alarm clock",
     "world clock",
     "pomodoro timer",
-    "productivity"
+    "productivity",
+    "internet clock",
+    "free clock",
+    "web clock"
   ],
   "author": "TysunM",
   "license": "MIT",
