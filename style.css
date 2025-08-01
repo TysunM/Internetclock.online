@@ -169,7 +169,8 @@ body {
 
 /* STOPWATCH MODE */
 #stopwatch-mode {
-    justify-content: space-around;
+    justify-content: center; /* <-- FIX: Center items vertically */
+    gap: 2rem; /* <-- FIX: Add space between items */
 }
 #stopwatch-mode .time-display {
     font-family: var(--font-mono);
@@ -199,11 +200,10 @@ body {
 #laps-container {
     width: 80%;
     max-height: 150px;
-    min-height: 50px;
     overflow-y: auto;
     font-family: var(--font-mono);
     text-align: left;
-    border: none; /* <-- FIX: Removed the border */
+    border: none;
     border-radius: 5px;
     padding: 0.5rem;
 }
