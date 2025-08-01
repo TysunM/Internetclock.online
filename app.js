@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
             elapsedTime: 0,
             animationFrameId: null,
             isRunning: false,
-            laps: [],
         }
     };
 
@@ -26,8 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         timeFormatToggle: document.getElementById('time-format-toggle'),
         stopwatchDisplay: document.querySelector('#stopwatch-mode .time-display'),
         startStopBtn: document.getElementById('start-stop-btn'),
-        lapResetBtn: document.getElementById('lap-reset-btn'),
-        lapsContainer: document.getElementById('laps-container'),
+        resetBtn: document.getElementById('reset-btn'),
         fullscreenBtn: document.getElementById('fullscreen-btn'),
     };
 
@@ -79,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleTimeFormatToggle() {
         state.bigClock.is24Hour = elements.timeFormatToggle.checked;
         elements.body.dataset.timeFormat = state.bigClock.is24Hour ? '24h' : '12h';
-        updateBigClock(); // Update immediately on toggle
+        updateBigClock();
     }
 
     function populateTimezones() {
@@ -94,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.timezoneSelector.value = state.bigClock.timeZone;
         } catch (e) {
             console.error("Timezone population failed:", e);
-            elements.timezoneSelector.style.display = 'none';
         }
     }
 
@@ -130,47 +127,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function startStopwatch() {
-        if (state.stopwatch.isRunning) { // Logic to STOP
+        if (state.stopwatch.isRunning) { // STOP
             state.stopwatch.isRunning = false;
             state.stopwatch.elapsedTime += Date.now() - state.stopwatch.startTime;
             cancelAnimationFrame(state.stopwatch.animationFrameId);
-            updateStopwatchDisplay(); 
             elements.startStopBtn.textContent = "START";
-            elements.lapResetBtn.textContent = "RESET";
-        } else { // Logic to START
+        } else { // START
             state.stopwatch.isRunning = true;
             state.stopwatch.startTime = Date.now();
             elements.startStopBtn.textContent = "STOP";
-            elements.lapResetBtn.textContent = "LAP";
             requestAnimationFrame(stopwatchLoop);
         }
     }
 
-    function lapResetStopwatch() {
-        if (state.stopwatch.isRunning) { // Lap
-            const lapTime = Date.now() - state.stopwatch.startTime + state.stopwatch.elapsedTime;
-            state.stopwatch.laps.push(lapTime);
-            const lapElement = document.createElement('div');
-            lapElement.innerHTML = `Lap ${state.stopwatch.laps.length}: ${formatStopwatchTime(lapTime)}`;
-            elements.lapsContainer.prepend(lapElement);
-        } else { // Reset
-            state.stopwatch.elapsedTime = 0;
-            state.stopwatch.laps = [];
-            elements.lapsContainer.innerHTML = '';
-            updateStopwatchDisplay();
-        }
+    function resetStopwatch() {
+        state.stopwatch.isRunning = false;
+        cancelAnimationFrame(state.stopwatch.animationFrameId);
+        state.stopwatch.elapsedTime = 0;
+        elements.startStopBtn.textContent = "START";
+        updateStopwatchDisplay();
     }
 
     // --- FULLSCREEN LOGIC ---
     function toggleFullscreen() {
         if (!document.fullscreenElement) {
             document.documentElement.requestFullscreen().catch(err => {
-                alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+                alert(`Error: ${err.message}`);
             });
         } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
+            if (document.exitFullscreen) document.exitFullscreen();
         }
     }
 
@@ -184,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         elements.timeFormatToggle.addEventListener('change', handleTimeFormatToggle);
         elements.startStopBtn.addEventListener('click', startStopwatch);
-        elements.lapResetBtn.addEventListener('click', lapResetStopwatch);
+        elements.resetBtn.addEventListener('click', resetStopwatch);
         elements.fullscreenBtn.addEventListener('click', toggleFullscreen);
 
         // Initial Setup
