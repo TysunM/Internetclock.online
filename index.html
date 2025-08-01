@@ -3,27 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Internet Clock</title>
+
+    <!-- SEO Meta Tags -->
+    <title>Internet Clock - Live Time, Online Stopwatch & World Clock</title>
+    <meta name="description" content="The official Internet Clock. Get the exact live time with our full-screen big clock, use the precision online stopwatch, and check time zones from around the world.">
+    <meta name="keywords" content="internet clock, online clock, live time, exact time, online stopwatch, world clock, time, clock">
+    
     <!-- Link to the external CSS file -->
     <link rel="stylesheet" href="style.css">
+    
     <!-- Preconnect to Google Fonts for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- JSON-LD Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Internet Clock",
+      "url": "http://internetclock.online",
+      "description": "A free, online tool providing the exact live time, a precision stopwatch, and world clock functionalities in a clean, user-friendly interface.",
+      "applicationCategory": "Utilities",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires a modern web browser with JavaScript enabled.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0"
+      }
+    }
+    </script>
+    
+    <!-- PASTE YOUR GOOGLE ADSENSE AUTO ADS SCRIPT HERE -->
+
 </head>
 <body>
 
     <div class="app-container">
-        <header class="ad-placeholder ad-top">
-            <span>Advertisement 728x90</span>
-        </header>
-
-        <aside class="ad-left">
-            <div class="ad-placeholder"><span>Ad 200x200</span></div>
-            <div class="ad-placeholder"><span>Ad 200x200</span></div>
-            <div class="ad-placeholder"><span>Ad 200x200</span></div>
-        </aside>
-
         <main class="main-content">
             <nav class="nav-tabs">
                 <button class="nav-tab active" data-mode="big-clock-mode">BIG CLOCK</button>
@@ -36,7 +53,7 @@
 
             <div class="clock-modes-wrapper">
                 <div id="big-clock-mode" class="clock-mode active">
-                    <div class="time-display">12:00:00 AM</div>
+                    <h1 class="time-display">12:00:00 AM</h1>
                     <div class="date-display">Thursday, July 31, 2025</div>
                     <select id="timezone-selector"></select>
                 </div>
@@ -59,16 +76,6 @@
                 <button class="control-btn" title="Share">📤</button>
             </div>
         </main>
-
-        <aside class="ad-right">
-            <div class="ad-placeholder"><span>Ad 200x200</span></div>
-            <div class="ad-placeholder"><span>Ad 200x200</span></div>
-            <div class="ad-placeholder"><span>Ad 200x200</span></div>
-        </aside>
-
-        <footer class="ad-placeholder ad-bottom">
-            <span>Advertisement 728x90</span>
-        </footer>
     </div>
 
     <!-- Link to the external JavaScript file -->
