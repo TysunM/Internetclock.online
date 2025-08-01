@@ -11,6 +11,13 @@
     --transition-speed: 0.3s;
 }
 
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
@@ -21,7 +28,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    overflow: hidden;
+    overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 .app-container {
@@ -36,7 +43,6 @@ body {
         "footer footer footer";
     gap: 1rem;
     padding: 1rem;
-    box-sizing: border-box;
 }
 
 /* --- Ad Placeholders --- */
@@ -135,6 +141,7 @@ body {
 #big-clock-mode .date-display {
     font-size: clamp(1rem, 3vw, 1.5rem);
     margin-top: 0.5rem;
+    text-align: center;
 }
 #timezone-selector {
     margin-top: 1rem;
@@ -210,8 +217,11 @@ body {
     color: #000;
 }
 
-/* --- MOBILE RESPONSIVE FIX --- */
+/* --- MOBILE RESPONSIVE OVERHAUL --- */
 @media (max-width: 900px) {
+    body {
+        overflow-y: auto; /* Allow scrolling on mobile if content overflows */
+    }
     .app-container {
         /* Switch to a single column layout for mobile */
         grid-template-columns: 1fr;
@@ -221,7 +231,7 @@ body {
             "main"
             "footer";
         padding: 0.5rem; /* Reduce padding on mobile */
-        height: 100%; /* Allow content to scroll if needed */
+        height: auto; /* Allow content to determine height */
         min-height: 100vh;
     }
 
@@ -232,30 +242,39 @@ body {
 
     .main-content {
         padding: 1rem;
+        min-height: 500px; /* Ensure main area has some height */
     }
 
     /* Adjust clock sizes for mobile */
     #big-clock-mode .time-display, 
     #stopwatch-mode .time-display { 
-        font-size: clamp(2.5rem, 15vw, 4rem); 
+        font-size: 15vw; /* Use viewport width for responsive text */
+        text-align: center;
     }
 
     #big-clock-mode .date-display {
-        font-size: clamp(0.9rem, 4vw, 1.2rem);
+        font-size: 4vw;
+    }
+
+    .stopwatch-controls {
+        flex-direction: column; /* Stack buttons vertically */
+        width: 100%;
+        align-items: center;
     }
 
     .stopwatch-controls button {
-        font-size: 1rem;
-        padding: 0.7rem 1.2rem;
+        width: 80%;
+        font-size: 1.2rem;
+        padding: 1rem;
     }
     
     .bottom-bar {
         flex-wrap: wrap; /* Allow buttons to wrap */
-        gap: 0.5rem;
+        gap: 0.75rem;
     }
     .control-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1.1rem;
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
     }
 }
