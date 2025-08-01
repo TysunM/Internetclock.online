@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
         bigClock: {
             intervalId: null,
             timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            is24Hour: false,
         },
         stopwatch: {
             startTime: 0,
@@ -16,11 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const elements = {
+        body: document.body,
         navTabs: document.querySelectorAll('.nav-tab:not(.disabled)'),
         clockModes: document.querySelectorAll('.clock-mode'),
         bigClockDisplay: document.querySelector('#big-clock-mode .time-display'),
         dateDisplay: document.querySelector('#big-clock-mode .date-display'),
         timezoneSelector: document.getElementById('timezone-selector'),
+        timeFormatToggle: document.getElementById('time-format-toggle'),
         stopwatchDisplay: document.querySelector('#stopwatch-mode .time-display'),
         startStopBtn: document.getElementById('start-stop-btn'),
         lapResetBtn: document.getElementById('lap-reset-btn'),
@@ -32,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function switchMode(modeId) {
         if (state.activeMode === modeId) return;
         
-        // Stop old timers
         if (state.activeMode === 'big-clock-mode') {
             clearInterval(state.bigClock.intervalId);
             state.bigClock.intervalId = null;
@@ -48,20 +50,21 @@ document.addEventListener('DOMContentLoaded', () => {
             mode.classList.toggle('active', mode.id === modeId);
         });
 
-        // Start new timers
-        if (modeId === 'big-clock-mode') {
-            initBigClock();
-        }
-        if (modeId === 'stopwatch-mode') {
-            updateStopwatchDisplay();
-        }
+        if (modeId === 'big-clock-mode') initBigClock();
+        if (modeId === 'stopwatch-mode') updateStopwatchDisplay();
     }
 
     // --- BIG CLOCK LOGIC ---
     function updateBigClock() {
         try {
             const now = new Date();
-            const timeOptions = { timeZone: state.bigClock.timeZone, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            const timeOptions = { 
+                timeZone: state.bigClock.timeZone, 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit', 
+                hour12: !state.bigClock.is24Hour 
+            };
             const dateOptions = { timeZone: state.bigClock.timeZone, weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
             elements.bigClockDisplay.textContent = now.toLocaleTimeString('en-US', timeOptions);
@@ -71,6 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.bigClockDisplay.textContent = "Error";
             if (state.bigClock.intervalId) clearInterval(state.bigClock.intervalId);
         }
+    }
+    
+    function handleTimeFormatToggle() {
+        state.bigClock.is24Hour = elements.timeFormatToggle.checked;
+        elements.body.dataset.timeFormat = state.bigClock.is24Hour ? '24h' : '12h';
+        updateBigClock(); // Update immediately on toggle
     }
 
     function populateTimezones() {
@@ -173,13 +182,14 @@ document.addEventListener('DOMContentLoaded', () => {
             state.bigClock.timeZone = e.target.value;
             initBigClock();
         });
+        elements.timeFormatToggle.addEventListener('change', handleTimeFormatToggle);
         elements.startStopBtn.addEventListener('click', startStopwatch);
         elements.lapResetBtn.addEventListener('click', lapResetStopwatch);
         elements.fullscreenBtn.addEventListener('click', toggleFullscreen);
 
         // Initial Setup
         populateTimezones();
-        initBigClock(); // <-- This is the critical fix to start the clock
+        initBigClock();
     }
 
     init();
