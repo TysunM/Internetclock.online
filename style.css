@@ -1,22 +1,200 @@
-/* --- Clock Modes --- */
-.clock-modes-wrapper { 
-    display: grid; 
-    place-items: center; 
-    min-height: 0; 
-    height: 100%;
+/* --- Base & Theme --- */
+:root {
+    --bg-color: #0a0a0a;
+    --primary-color: #00ff88;
+    --secondary-color: #70e1ff; /* 24hr mode color */
+    --text-color: #e0e0e0;
+    --font-display: 'Orbitron', sans-serif;
+    --font-mono: 'Roboto Mono', monospace;
+    --font-body: 'Roboto', sans-serif;
+    --transition-speed: 0.3s;
 }
+
+html { box-sizing: border-box; }
+*, *:before, *:after { box-sizing: inherit; }
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-body);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* --- App Container & Ad Spaces --- */
+.app-container {
+    width: 100%;
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr;
+    padding: 1rem;
+    gap: 1rem;
+}
+.ad-placeholder {
+    height: 90px;
+    width: 100%;
+    max-width: 728px;
+    margin: 0 auto;
+}
+
+/* --- Main Content Area --- */
+.main-content {
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+    border-radius: 15px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 1.5rem;
+    overflow: hidden;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- Navigation Tabs --- */
+.nav-tabs {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+.nav-tab {
+    background-color: #2a2a2a;
+    color: var(--text-color);
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+.nav-tab.active {
+    background-color: var(--primary-color);
+    color: #000;
+    box-shadow: 0 0 15px var(--primary-color);
+}
+.nav-tab.disabled {
+    background-color: #1f1f1f;
+    color: #555;
+    cursor: not-allowed;
+}
+
+/* --- Clock Modes --- */
+.clock-modes-wrapper { display: grid; place-items: center; min-height: 0; }
 .clock-mode { 
     grid-area: 1 / 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: center; /* <-- FIX: Center content vertically */
     align-items: center;
-    gap: 2rem; /* Increased gap for better spacing */
+    gap: 1.5rem; /* <-- FIX: Add space between elements */
     width: 100%;
     height: 100%;
     opacity: 0;
     visibility: hidden;
     transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
-    padding: 2rem 0; /* Increased padding to push content away from edges */
+    padding: 1rem 0;
 }
 .clock-mode.active { opacity: 1; visibility: visible; }
+
+/* BIG CLOCK MODE */
+#big-clock-mode .time-display {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 10vw, 5.5rem);
+    color: var(--primary-color);
+    text-shadow: 0 0 5px #fff, 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+    transition: color var(--transition-speed) ease, text-shadow var(--transition-speed) ease;
+    order: 2; /* <-- FIX: Ensure time is after date */
+}
+body[data-time-format="24h"] #big-clock-mode .time-display {
+    color: var(--secondary-color);
+    text-shadow: 0 0 5px #fff, 0 0 10px var(--secondary-color), 0 0 20px var(--secondary-color);
+}
+#big-clock-mode .date-display {
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    text-align: center;
+    order: 1; /* <-- FIX: Ensure date is before time */
+}
+.clock-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    order: 3; /* <-- FIX: Ensure controls are last */
+}
+#timezone-selector {
+    background-color: #2a2a2a;
+    color: var(--text-color);
+    border: 1px solid #444;
+    border-radius: 5px;
+    padding: 0.5rem;
+}
+
+/* 12/24hr Toggle Switch */
+.toggle-switch-container { display: flex; align-items: center; gap: 0.5rem; }
+.toggle-switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 26px; }
+.slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: var(--secondary-color); }
+input:checked + .slider:before { transform: translateX(24px); }
+
+/* STOPWATCH MODE */
+#stopwatch-mode .time-display {
+    font-family: var(--font-mono);
+    font-size: clamp(2rem, 10vw, 5.5rem);
+    color: var(--text-color);
+}
+#stopwatch-mode .time-display .milliseconds { font-size: 0.5em; color: #888; }
+.stopwatch-controls {
+    display: flex;
+    gap: 1rem;
+}
+.stopwatch-controls button {
+    font-size: 1.2rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+#start-stop-btn { background-color: #27ae60; color: white; }
+#reset-btn { background-color: #e74c3c; color: white; }
+
+/* --- Bottom Control Bar --- */
+.bottom-bar { display: flex; justify-content: center; gap: 1rem; padding-top: 1rem; }
+.control-btn {
+    background-color: #2a2a2a;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all var(--transition-speed) ease;
+}
+.control-btn:hover { background-color: var(--primary-color); color: #000; }
+
+/* --- MOBILE RESPONSIVE --- */
+@media (max-width: 900px) {
+    body { overflow-y: auto; }
+    .app-container { padding: 0.5rem; height: auto; min-height: 100vh; }
+    .main-content { padding: 1rem; }
+    #big-clock-mode .time-display, 
+    #stopwatch-mode .time-display { font-size: 12vw; }
+    #big-clock-mode .date-display { font-size: 4vw; }
+    .stopwatch-controls { flex-direction: column; width: 100%; align-items: center; }
+    .stopwatch-controls button { width: 80%; font-size: 1.2rem; padding: 1rem; }
+    .bottom-bar { flex-wrap: wrap; gap: 0.75rem; }
+    .control-btn { width: 50px; height: 50px; font-size: 1.5rem; }
+}
