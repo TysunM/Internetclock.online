@@ -91,13 +91,14 @@ body {
     grid-area: 1 / 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between; /* <-- FIX: Creates space between elements */
     align-items: center;
     width: 100%;
     height: 100%;
     opacity: 0;
     visibility: hidden;
     transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
+    padding: 1rem 0; /* Add some vertical padding */
 }
 .clock-mode.active { opacity: 1; visibility: visible; }
 
@@ -143,7 +144,6 @@ input:checked + .slider { background-color: var(--secondary-color); }
 input:checked + .slider:before { transform: translateX(24px); }
 
 /* STOPWATCH MODE */
-#stopwatch-mode { justify-content: center; }
 #stopwatch-mode .time-display {
     font-family: var(--font-mono);
     font-size: clamp(2rem, 10vw, 5.5rem);
@@ -151,7 +151,6 @@ input:checked + .slider:before { transform: translateX(24px); }
 }
 #stopwatch-mode .time-display .milliseconds { font-size: 0.5em; color: #888; }
 .stopwatch-controls {
-    margin-top: 1.5rem;
     display: flex;
     gap: 1rem;
 }
