@@ -169,17 +169,4 @@ document.addEventListener('DOMContentLoaded', () => {
         // Event Listeners
         elements.navTabs.forEach(tab => tab.addEventListener('click', () => switchMode(tab.dataset.mode)));
         elements.timezoneSelector.addEventListener('change', (e) => {
-            state.bigClock.timeZone = e.target.value;
-            initBigClock();
-        });
-        elements.startStopBtn.addEventListener('click', startStopwatch);
-        elements.lapResetBtn.addEventListener('click', lapResetStopwatch);
-        elements.fullscreenBtn.addEventListener('click', toggleFullscreen);
-
-        // Initial Setup
-        populateTimezones();
-        initBigClock();
-    }
-
-    init();
-});
+            state.bigClock.timeZone = 
