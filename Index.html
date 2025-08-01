@@ -1,51 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Internet Clock</title>
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    <title>Internet Clock</title>
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Preconnect to Google Fonts for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
-
 <body>
-    <div class="container">
-        <!-- Top Banner Ad -->
-        <div class="ad-placeholder-top">Advertisement 728x90</div>
 
-        <header>
-            <h1>The Internet Clock</h1>
-            <nav>
-                <button id="big-clock-btn" class="nav-btn">Big Clock</button>
-                <button id="world-clock-btn" class="nav-btn">World Clock</button>
-                <button id="stopwatch-btn" class="nav-btn">Stopwatch</button>
-                <button id="focus-mode-btn" class="nav-btn">Focus (Pomodoro)</button>
-                <button id="alarm-clock-btn" class="nav-btn">Alarm Clock</button>
-                <button id="timer-btn" class="nav-btn">Timer</button>
-            </nav>
+    <div class="app-container">
+        <header class="ad-placeholder ad-top">
+            <span>Advertisement 728x90</span>
         </header>
 
-        <main id="main-content">
-            <!-- All clock modes, including their Start/Stop/Reset buttons,
-                 will be dynamically loaded into this area by app.js -->
+        <aside class="ad-left">
+            <div class="ad-placeholder"><span>Ad 200x200</span></div>
+            <div class="ad-placeholder"><span>Ad 200x200</span></div>
+            <div class="ad-placeholder"><span>Ad 200x200</span></div>
+        </aside>
+
+        <main class="main-content">
+            <nav class="nav-tabs">
+                <button class="nav-tab active" data-mode="big-clock-mode">BIG CLOCK</button>
+                <button class="nav-tab" data-mode="stopwatch-mode">STOP WATCH</button>
+                <button class="nav-tab disabled" title="Coming Soon!">WORLD CLOCK</button>
+                <button class="nav-tab disabled" title="Coming Soon!">FOCUS</button>
+                <button class="nav-tab disabled" title="Coming Soon!">ALARM CLOCK</button>
+                <button class="nav-tab disabled" title="Coming Soon!">TIMER</button>
+            </nav>
+
+            <div class="clock-modes-wrapper">
+                <div id="big-clock-mode" class="clock-mode active">
+                    <div class="time-display">12:00:00 AM</div>
+                    <div class="date-display">Thursday, July 31, 2025</div>
+                    <select id="timezone-selector"></select>
+                </div>
+
+                <div id="stopwatch-mode" class="clock-mode">
+                    <div class="time-display">00:00:00<span class="milliseconds">.000</span></div>
+                    <div class="stopwatch-controls">
+                        <button id="start-stop-btn">START</button>
+                        <button id="lap-reset-btn">RESET</button>
+                    </div>
+                    <div id="laps-container"></div>
+                </div>
+            </div>
+
+            <div class="bottom-bar">
+                <button class="control-btn" title="Settings">⚙️</button>
+                <button class="control-btn" title="Sound">🔊</button>
+                <button class="control-btn" title="Theme">🌓</button>
+                <button class="control-btn" title="Fullscreen" id="fullscreen-btn">⛶</button>
+                <button class="control-btn" title="Share">📤</button>
+            </div>
         </main>
 
-        <footer>
-            <!-- Bottom Settings Bar -->
-            <div class="settings-bar">
-                 <button id="settings-btn" class="settings-btn">Settings</button>
-                 <button id="themes-btn" class="settings-btn">Themes</button>
-                 <button id="sounds-btn" class="settings-btn">Alarm Sounds</button>
-                 <button id="music-btn" class="settings-btn">Music</button>
-            </div>
-            <!-- Bottom Banner Ad -->
-            <div class="ad-placeholder-bottom">Advertisement 728x90</div>
+        <aside class="ad-right">
+            <div class="ad-placeholder"><span>Ad 200x200</span></div>
+            <div class="ad-placeholder"><span>Ad 200x200</span></div>
+            <div class="ad-placeholder"><span>Ad 200x200</span></div>
+        </aside>
+
+        <footer class="ad-placeholder ad-bottom">
+            <span>Advertisement 728x90</span>
         </footer>
     </div>
 
-    <!-- The fully functional JavaScript file -->
-    <script src="scripts/app.js"></script>
+    <!-- Link to the external JavaScript file -->
+    <script src="app.js"></script>
 </body>
-
 </html>
