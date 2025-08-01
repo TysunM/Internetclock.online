@@ -5,27 +5,26 @@ document.addEventListener('DOMContentLoaded', () => {
         bigClock: {
             intervalId: null,
             timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            is24Hour: false,
         },
         stopwatch: {
             startTime: 0,
             elapsedTime: 0,
             animationFrameId: null,
             isRunning: false,
+            laps: [],
         }
     };
 
     const elements = {
-        body: document.body,
         navTabs: document.querySelectorAll('.nav-tab:not(.disabled)'),
         clockModes: document.querySelectorAll('.clock-mode'),
         bigClockDisplay: document.querySelector('#big-clock-mode .time-display'),
         dateDisplay: document.querySelector('#big-clock-mode .date-display'),
         timezoneSelector: document.getElementById('timezone-selector'),
-        timeFormatToggle: document.getElementById('time-format-toggle'),
         stopwatchDisplay: document.querySelector('#stopwatch-mode .time-display'),
         startStopBtn: document.getElementById('start-stop-btn'),
-        resetBtn: document.getElementById('reset-btn'),
+        lapResetBtn: document.getElementById('lap-reset-btn'),
+        lapsContainer: document.getElementById('laps-container'),
         fullscreenBtn: document.getElementById('fullscreen-btn'),
     };
 
@@ -33,9 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function switchMode(modeId) {
         if (state.activeMode === modeId) return;
         
+        // Stop old timers
         if (state.activeMode === 'big-clock-mode') {
             clearInterval(state.bigClock.intervalId);
-            state.bigClock.intervalId = null;
         }
         
         state.activeMode = modeId;
@@ -48,21 +47,20 @@ document.addEventListener('DOMContentLoaded', () => {
             mode.classList.toggle('active', mode.id === modeId);
         });
 
-        if (modeId === 'big-clock-mode') initBigClock();
-        if (modeId === 'stopwatch-mode') updateStopwatchDisplay();
+        // Start new timers
+        if (modeId === 'big-clock-mode') {
+            initBigClock();
+        }
+        if (modeId === 'stopwatch-mode') {
+            updateStopwatchDisplay(); // Show current state immediately
+        }
     }
 
     // --- BIG CLOCK LOGIC ---
     function updateBigClock() {
         try {
             const now = new Date();
-            const timeOptions = { 
-                timeZone: state.bigClock.timeZone, 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                second: '2-digit', 
-                hour12: !state.bigClock.is24Hour 
-            };
+            const timeOptions = { timeZone: state.bigClock.timeZone, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
             const dateOptions = { timeZone: state.bigClock.timeZone, weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
             elements.bigClockDisplay.textContent = now.toLocaleTimeString('en-US', timeOptions);
@@ -70,14 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.error("Error updating big clock:", err);
             elements.bigClockDisplay.textContent = "Error";
-            if (state.bigClock.intervalId) clearInterval(state.bigClock.intervalId);
+            clearInterval(state.bigClock.intervalId);
         }
-    }
-    
-    function handleTimeFormatToggle() {
-        state.bigClock.is24Hour = elements.timeFormatToggle.checked;
-        elements.body.dataset.timeFormat = state.bigClock.is24Hour ? '24h' : '12h';
-        updateBigClock();
     }
 
     function populateTimezones() {
@@ -92,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.timezoneSelector.value = state.bigClock.timeZone;
         } catch (e) {
             console.error("Timezone population failed:", e);
+            elements.timezoneSelector.style.display = 'none';
         }
     }
 
@@ -127,35 +120,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function startStopwatch() {
-        if (state.stopwatch.isRunning) { // STOP
+        if (state.stopwatch.isRunning) { // Logic to STOP
             state.stopwatch.isRunning = false;
             state.stopwatch.elapsedTime += Date.now() - state.stopwatch.startTime;
             cancelAnimationFrame(state.stopwatch.animationFrameId);
+            updateStopwatchDisplay(); 
             elements.startStopBtn.textContent = "START";
-        } else { // START
+            elements.lapResetBtn.textContent = "RESET";
+        } else { // Logic to START
             state.stopwatch.isRunning = true;
             state.stopwatch.startTime = Date.now();
             elements.startStopBtn.textContent = "STOP";
+            elements.lapResetBtn.textContent = "LAP";
             requestAnimationFrame(stopwatchLoop);
         }
     }
 
-    function resetStopwatch() {
-        state.stopwatch.isRunning = false;
-        cancelAnimationFrame(state.stopwatch.animationFrameId);
-        state.stopwatch.elapsedTime = 0;
-        elements.startStopBtn.textContent = "START";
-        updateStopwatchDisplay();
+    function lapResetStopwatch() {
+        if (state.stopwatch.isRunning) { // Lap
+            const lapTime = Date.now() - state.stopwatch.startTime + state.stopwatch.elapsedTime;
+            state.stopwatch.laps.push(lapTime);
+            const lapElement = document.createElement('div');
+            lapElement.innerHTML = `Lap ${state.stopwatch.laps.length}: ${formatStopwatchTime(lapTime)}`;
+            elements.lapsContainer.prepend(lapElement);
+        } else { // Reset
+            state.stopwatch.elapsedTime = 0;
+            state.stopwatch.laps = [];
+            elements.lapsContainer.innerHTML = '';
+            updateStopwatchDisplay();
+        }
     }
 
     // --- FULLSCREEN LOGIC ---
     function toggleFullscreen() {
         if (!document.fullscreenElement) {
             document.documentElement.requestFullscreen().catch(err => {
-                alert(`Error: ${err.message}`);
+                alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
             });
         } else {
-            if (document.exitFullscreen) document.exitFullscreen();
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
         }
     }
 
@@ -164,18 +169,4 @@ document.addEventListener('DOMContentLoaded', () => {
         // Event Listeners
         elements.navTabs.forEach(tab => tab.addEventListener('click', () => switchMode(tab.dataset.mode)));
         elements.timezoneSelector.addEventListener('change', (e) => {
-            state.bigClock.timeZone = e.target.value;
-            initBigClock();
-        });
-        elements.timeFormatToggle.addEventListener('change', handleTimeFormatToggle);
-        elements.startStopBtn.addEventListener('click', startStopwatch);
-        elements.resetBtn.addEventListener('click', resetStopwatch);
-        elements.fullscreenBtn.addEventListener('click', toggleFullscreen);
-
-        // Initial Setup
-        populateTimezones();
-        initBigClock();
-    }
-
-    init();
-});
+            state.bigClock.timeZone = 
