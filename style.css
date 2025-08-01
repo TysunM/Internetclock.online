@@ -163,14 +163,14 @@ body {
     color: var(--text-color);
     border: 1px solid #444;
     border-radius: 5px;
-    padding: 0.5rem;
+    padding: 0rem;
     max-width: 90%;
 }
 
 /* STOPWATCH MODE */
 #stopwatch-mode {
     justify-content: center; /* <-- FIX: Center items vertically */
-    gap: 2rem; /* <-- FIX: Add space between items */
+    gap: 0rem; /* <-- FIX: Add space between items */
 }
 #stopwatch-mode .time-display {
     font-family: var(--font-mono);
