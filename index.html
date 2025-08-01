@@ -7,12 +7,9 @@
     <!-- SEO Meta Tags -->
     <title>Internet Clock - Live Time, Online Stopwatch & World Clock</title>
     <meta name="description" content="The official Internet Clock. Get the exact live time with our full-screen big clock, use the precision online stopwatch, and check time zones from around the world.">
-    <meta name="keywords" content="internet clock, online clock, live time, exact time, online stopwatch, world clock, time, clock">
     
-    <!-- Link to the external CSS file -->
+    <!-- Links -->
     <link rel="stylesheet" href="style.css">
-    
-    <!-- Preconnect to Google Fonts for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
@@ -24,14 +21,7 @@
       "@type": "WebApplication",
       "name": "Internet Clock",
       "url": "http://internetclock.online",
-      "description": "A free, online tool providing the exact live time, a precision stopwatch, and world clock functionalities in a clean, user-friendly interface.",
-      "applicationCategory": "Utilities",
-      "operatingSystem": "All",
-      "browserRequirements": "Requires a modern web browser with JavaScript enabled.",
-      "offers": {
-        "@type": "Offer",
-        "price": "0"
-      }
+      "description": "A free, online tool providing the exact live time and a precision stopwatch."
     }
     </script>
     
@@ -41,9 +31,7 @@
 <body>
 
     <div class="app-container">
-        <header class="ad-placeholder ad-top">
-            <span>Advertisement 728x90</span>
-        </header>
+        <header class="ad-placeholder ad-top"></header>
 
         <main class="main-content">
             <nav class="nav-tabs">
@@ -59,16 +47,25 @@
                 <div id="big-clock-mode" class="clock-mode active">
                     <h1 class="time-display">12:00:00 AM</h1>
                     <div class="date-display">Thursday, July 31, 2025</div>
-                    <select id="timezone-selector"></select>
+                    <div class="clock-controls">
+                        <select id="timezone-selector"></select>
+                        <div class="toggle-switch-container">
+                            <span>12hr</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="time-format-toggle">
+                                <span class="slider"></span>
+                            </label>
+                            <span>24hr</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="stopwatch-mode" class="clock-mode">
                     <div class="time-display">00:00:00<span class="milliseconds">.000</span></div>
                     <div class="stopwatch-controls">
                         <button id="start-stop-btn">START</button>
-                        <button id="lap-reset-btn">RESET</button>
+                        <button id="reset-btn">RESET</button>
                     </div>
-                    <div id="laps-container"></div>
                 </div>
             </div>
 
@@ -81,12 +78,9 @@
             </div>
         </main>
 
-        <footer class="ad-placeholder ad-bottom">
-            <span>Advertisement 728x90</span>
-        </footer>
+        <footer class="ad-placeholder ad-bottom"></footer>
     </div>
 
-    <!-- Link to the external JavaScript file -->
     <script src="app.js"></script>
 </body>
 </html>
