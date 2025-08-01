@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Stop old timers
         if (state.activeMode === 'big-clock-mode') {
             clearInterval(state.bigClock.intervalId);
+            state.bigClock.intervalId = null;
         }
         
         state.activeMode = modeId;
@@ -52,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             initBigClock();
         }
         if (modeId === 'stopwatch-mode') {
-            updateStopwatchDisplay(); // Show current state immediately
+            updateStopwatchDisplay();
         }
     }
 
@@ -68,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.error("Error updating big clock:", err);
             elements.bigClockDisplay.textContent = "Error";
-            clearInterval(state.bigClock.intervalId);
+            if (state.bigClock.intervalId) clearInterval(state.bigClock.intervalId);
         }
     }
 
@@ -169,4 +170,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // Event Listeners
         elements.navTabs.forEach(tab => tab.addEventListener('click', () => switchMode(tab.dataset.mode)));
         elements.timezoneSelector.addEventListener('change', (e) => {
-            state.bigClock.timeZone = 
+            state.bigClock.timeZone = e.target.value;
+            initBigClock();
+        });
+        elements.startStopBtn.addEventListener('click', startStopwatch);
+        elements.lapResetBtn.addEventListener('click', lapResetStopwatch);
+        elements.fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+        // Initial Setup
+        populateTimezones();
+        initBigClock(); // <-- This is the critical fix to start the clock
+    }
+
+    init();
+});
