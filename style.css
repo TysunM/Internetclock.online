@@ -28,51 +28,32 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    overflow-x: hidden; /* Prevent horizontal scroll */
+    overflow-x: hidden;
 }
 
+/* --- Simplified App Container for AdSense --- */
 .app-container {
     width: 100%;
+    max-width: 1200px; /* Max width for the main app on large screens */
     height: 100vh;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    grid-template-rows: auto 1fr auto;
-    grid-template-areas:
-        "header header header"
-        "ad-left main ad-right"
-        "footer footer footer";
-    gap: 1rem;
-    padding: 1rem;
-}
-
-/* --- Ad Placeholders --- */
-.ad-placeholder {
-    background-color: var(--surface-color);
-    border: 1px dashed #444;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--text-secondary-color);
-    font-size: 0.9rem;
-    overflow: hidden;
-    flex-direction: column;
-    gap: 0.5rem;
+    padding: 1rem;
 }
-.ad-top { grid-area: header; height: 90px; }
-.ad-bottom { grid-area: footer; height: 90px; }
-.ad-left { grid-area: ad-left; width: 200px; display: flex; flex-direction: column; gap: 1rem; }
-.ad-right { grid-area: ad-right; width: 200px; display: flex; flex-direction: column; gap: 1rem; }
-.ad-left .ad-placeholder, .ad-right .ad-placeholder { flex-grow: 1; }
 
 /* --- Main Content Area --- */
 .main-content {
-    grid-area: main;
+    width: 100%;
+    height: 95vh; /* Take up most of the vertical space */
+    max-height: 800px; /* Max height to keep it contained */
     background-color: #000;
     border-radius: 15px;
     display: grid;
     grid-template-rows: auto 1fr auto;
     padding: 1.5rem;
     overflow: hidden;
+    border: 1px solid #222;
 }
 
 /* --- Navigation Tabs --- */
@@ -217,59 +198,34 @@ body {
     color: #000;
 }
 
-/* --- MOBILE RESPONSIVE OVERHAUL --- */
+/* --- MOBILE RESPONSIVE --- */
 @media (max-width: 900px) {
-    body {
-        overflow-y: auto; /* Allow scrolling on mobile if content overflows */
-    }
     .app-container {
-        /* Switch to a single column layout for mobile */
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr auto;
-        grid-template-areas:
-            "header"
-            "main"
-            "footer";
-        padding: 0.5rem; /* Reduce padding on mobile */
-        height: auto; /* Allow content to determine height */
-        min-height: 100vh;
+        padding: 0.5rem;
     }
-
-    /* Hide the side ad panels completely */
-    .ad-left, .ad-right {
-        display: none;
-    }
-
     .main-content {
         padding: 1rem;
-        min-height: 500px; /* Ensure main area has some height */
+        height: 98vh; /* Use more vertical space on mobile */
     }
-
-    /* Adjust clock sizes for mobile */
     #big-clock-mode .time-display, 
     #stopwatch-mode .time-display { 
-        font-size: 15vw; /* Use viewport width for responsive text */
-        text-align: center;
+        font-size: 15vw;
     }
-
     #big-clock-mode .date-display {
         font-size: 4vw;
     }
-
     .stopwatch-controls {
-        flex-direction: column; /* Stack buttons vertically */
+        flex-direction: column;
         width: 100%;
         align-items: center;
     }
-
     .stopwatch-controls button {
         width: 80%;
         font-size: 1.2rem;
         padding: 1rem;
     }
-    
     .bottom-bar {
-        flex-wrap: wrap; /* Allow buttons to wrap */
+        flex-wrap: wrap;
         gap: 0.75rem;
     }
     .control-btn {
