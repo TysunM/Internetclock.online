@@ -31,52 +31,22 @@ body {
     overflow-x: hidden;
 }
 
-/* --- App Container with Ad Spaces --- */
+/* --- Simplified App Container for AdSense --- */
 .app-container {
     width: 100%;
+    max-width: 1200px; /* Max width for the main app on large screens */
     height: 100vh;
-    display: grid;
-    grid-template-rows: auto 1fr auto; /* Top Ad, Main Content, Bottom Ad */
-    grid-template-columns: 1fr;
-    grid-template-areas:
-        "header"
-        "main"
-        "footer";
-    padding: 1rem;
-    gap: 1rem;
-}
-
-/* --- Ad Placeholders --- */
-.ad-placeholder {
-    background-color: var(--surface-color);
-    border: 1px dashed #444;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--text-secondary-color);
-    font-size: 0.9rem;
-    overflow: hidden;
-}
-.ad-top { 
-    grid-area: header; 
-    height: 90px;
-    width: 100%;
-    max-width: 728px;
-    margin: 0 auto;
-}
-.ad-bottom { 
-    grid-area: footer; 
-    height: 90px;
-    width: 100%;
-    max-width: 728px;
-    margin: 0 auto;
+    padding: 1rem;
 }
 
 /* --- Main Content Area --- */
 .main-content {
-    grid-area: main;
     width: 100%;
-    height: 100%;
+    height: 95vh; /* Take up most of the vertical space */
+    max-height: 800px; /* Max height to keep it contained */
     background-color: #000;
     border-radius: 15px;
     display: grid;
@@ -84,8 +54,6 @@ body {
     padding: 1.5rem;
     overflow: hidden;
     border: 1px solid #222;
-    max-width: 1200px; /* Max width for the clock app */
-    margin: 0 auto; /* Center the clock app */
 }
 
 /* --- Navigation Tabs --- */
@@ -237,10 +205,11 @@ body {
     }
     .main-content {
         padding: 1rem;
+        height: 98vh; /* Use more vertical space on mobile */
     }
     #big-clock-mode .time-display, 
     #stopwatch-mode .time-display { 
-        font-size: 12vw;
+        font-size: 15vw;
     }
     #big-clock-mode .date-display {
         font-size: 4vw;
