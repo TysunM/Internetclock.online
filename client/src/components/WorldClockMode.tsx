@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useClock } from '@/hooks/useClock';
+import { useClock } from '@/hooks/useClock.tsx';
 
 interface WorldClockTime {
   city: string;
