@@ -31,6 +31,8 @@
 <body>
 
     <div class="app-container">
+        <header class="ad-placeholder ad-top"></header>
+
         <main class="main-content">
             <nav class="nav-tabs">
                 <button class="nav-tab active" data-mode="big-clock-mode">BIG CLOCK</button>
@@ -43,8 +45,9 @@
 
             <div class="clock-modes-wrapper">
                 <div id="big-clock-mode" class="clock-mode active">
-                    <h1 class="time-display">12:00:00 AM</h1>
+                    <!-- FIX: Date is now positioned before the time display -->
                     <div class="date-display">Thursday, July 31, 2025</div>
+                    <h1 class="time-display">12:00:00 AM</h1>
                     <div class="clock-controls">
                         <select id="timezone-selector"></select>
                         <div class="toggle-switch-container">
@@ -75,6 +78,8 @@
                 <button class="control-btn" title="Share">📤</button>
             </div>
         </main>
+
+        <footer class="ad-placeholder ad-bottom"></footer>
     </div>
 
     <script src="app.js"></script>
