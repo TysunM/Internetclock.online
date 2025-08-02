@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function switchMode(modeId) {
         if (state.activeMode === modeId) return;
         
-        if (state.activeMode === 'big-clock-mode' && state.bigClock.intervalId) {
+        if (state.activeMode === 'big-clock-mode') {
             clearInterval(state.bigClock.intervalId);
             state.bigClock.intervalId = null;
         }
@@ -48,11 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
             mode.classList.toggle('active', mode.id === modeId);
         });
 
-        if (modeId === 'big-clock-mode') {
-            initBigClock();
-        } else if (modeId === 'stopwatch-mode') {
-            updateStopwatchDisplay();
-        }
+        if (modeId === 'big-clock-mode') initBigClock();
+        if (modeId === 'stopwatch-mode') updateStopwatchDisplay();
     }
 
     // --- BIG CLOCK LOGIC ---
@@ -132,8 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function startStopwatch() {
         if (state.stopwatch.isRunning) { // STOP
             state.stopwatch.isRunning = false;
-            cancelAnimationFrame(state.stopwatch.animationFrameId);
             state.stopwatch.elapsedTime += Date.now() - state.stopwatch.startTime;
+            cancelAnimationFrame(state.stopwatch.animationFrameId);
             elements.startStopBtn.textContent = "START";
         } else { // START
             state.stopwatch.isRunning = true;
@@ -144,10 +141,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resetStopwatch() {
-        if (state.stopwatch.isRunning) {
-            startStopwatch(); // Stop the clock first if it's running
-        }
+        state.stopwatch.isRunning = false;
+        cancelAnimationFrame(state.stopwatch.animationFrameId);
         state.stopwatch.elapsedTime = 0;
+        elements.startStopBtn.textContent = "START";
         updateStopwatchDisplay();
     }
 
