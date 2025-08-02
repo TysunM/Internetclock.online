@@ -14,27 +14,20 @@ html { box-sizing: border-box; }
 *, *:before, *:after { box-sizing: inherit; }
 
 body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    font-family: var(--font-body);
     margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    overflow: hidden;
+    background-color: #0a0a0a; /* Dark background */
+    color: #ffffff; /* Optional: white text for contrast */
+    font-family: 'Orbitron', 'Roboto Mono', sans-serif;
 }
 
 /* --- App Container & Ad Spaces --- */
 .app-container {
+    background-color: transparent;
     width: 100%;
     height: 100vh;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    grid-template-columns: 1fr;
-    padding: 1rem;
-    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+}
 }
 .ad-placeholder {
     height: 90px;
@@ -57,13 +50,12 @@ body {
     margin: 0 auto;
 }
 
-/* --- Navigation Tabs --- */
-.nav-tabs {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+.main-content {
+    background-color: transparent;
+    border-radius: 0;
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 .nav-tab {
     background-color: #2a2a2a;
@@ -87,13 +79,12 @@ body {
 
 /* --- Clock Modes --- */
 .clock-modes-wrapper { display: grid; place-items: center; min-height: 0; }
-.clock-mode { 
-    grid-area: 1 / 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* <-- FIX: Center content vertically */
-    align-items: center;
-    gap: 1.5rem; /* <-- FIX: Add space between elements */
+.clock-mode {
+    background-color: transparent;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    gap: 1.5rem;
     width: 100%;
     height: 100%;
     opacity: 0;
@@ -153,8 +144,8 @@ input:checked + .slider:before { transform: translateX(24px); }
 }
 #stopwatch-mode .time-display .milliseconds { font-size: 0.5em; color: #888; }
 .stopwatch-controls {
-    display: flex;
-    gap: 1rem;
+    background-color: transparent;
+    box-shadow: none;
 }
 .stopwatch-controls button {
     font-size: 1.2rem;
@@ -198,3 +189,4 @@ input:checked + .slider:before { transform: translateX(24px); }
     .bottom-bar { flex-wrap: wrap; gap: 0.75rem; }
     .control-btn { width: 50px; height: 50px; font-size: 1.5rem; }
 }
+
