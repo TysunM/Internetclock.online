@@ -26,28 +26,35 @@ body {
     overflow: hidden;
 }
 
-/* --- App Container --- */
+/* --- App Container & Ad Spaces --- */
 .app-container {
     width: 100%;
     height: 100vh;
-    display: flex; /* Changed for simple centering */
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr;
     padding: 1rem;
+    gap: 1rem;
+}
+.ad-placeholder {
+    height: 90px;
+    width: 100%;
+    max-width: 728px;
+    margin: 0 auto;
 }
 
 /* --- Main Content Area --- */
 .main-content {
     width: 100%;
-    height: 95vh;
-    max-width: 1200px;
-    max-height: 800px;
-    background-color: var(--bg-color); /* <-- UNIFIED BACKGROUND */
+    height: 100%;
+    background-color: var(--bg-color);
     border-radius: 15px;
     display: grid;
     grid-template-rows: auto 1fr auto;
     padding: 1.5rem;
     overflow: hidden;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 /* --- Navigation Tabs --- */
@@ -84,9 +91,9 @@ body {
     grid-area: 1 / 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: center; /* <-- FIX: Center content vertically */
     align-items: center;
-    gap: 1.5rem;
+    gap: 1.5rem; /* <-- FIX: Add space between elements */
     width: 100%;
     height: 100%;
     opacity: 0;
@@ -103,7 +110,7 @@ body {
     color: var(--primary-color);
     text-shadow: 0 0 5px #fff, 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
     transition: color var(--transition-speed) ease, text-shadow var(--transition-speed) ease;
-    order: 2;
+    order: 2; /* <-- FIX: Ensure time is after date */
 }
 body[data-time-format="24h"] #big-clock-mode .time-display {
     color: var(--secondary-color);
@@ -112,14 +119,14 @@ body[data-time-format="24h"] #big-clock-mode .time-display {
 #big-clock-mode .date-display {
     font-size: clamp(1rem, 3vw, 1.5rem);
     text-align: center;
-    order: 1;
+    order: 1; /* <-- FIX: Ensure date is before time */
 }
 .clock-controls {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    order: 3;
+    order: 3; /* <-- FIX: Ensure controls are last */
 }
 #timezone-selector {
     background-color: #2a2a2a;
