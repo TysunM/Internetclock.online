@@ -19,42 +19,32 @@ body {
     font-family: var(--font-body);
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    height: 100vh;
+    width: 100vw;
+    display: grid; /* <-- Use grid on the body */
+    grid-template-rows: auto 1fr auto; /* Header, Main, Footer */
+    grid-template-columns: 1fr;
     overflow: hidden;
 }
 
-/* --- App Container & Ad Spaces --- */
-.app-container {
-    width: 100%;
-    height: 100vh;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    grid-template-columns: 1fr;
-    padding: 1rem;
-    gap: 1rem;
-}
+/* --- Ad Placeholders --- */
 .ad-placeholder {
     height: 90px;
     width: 100%;
     max-width: 728px;
     margin: 0 auto;
+    padding: 0 1rem;
 }
 
-/* --- Main Content Area --- */
+/* --- Main Content Area (Full Page) --- */
 .main-content {
     width: 100%;
     height: 100%;
     background-color: var(--bg-color);
-    border-radius: 15px;
     display: grid;
     grid-template-rows: auto 1fr auto;
-    padding: 1.5rem;
+    padding: 1rem;
     overflow: hidden;
-    max-width: 1200px;
-    margin: 0 auto;
 }
 
 /* --- Navigation Tabs --- */
@@ -91,7 +81,7 @@ body {
     grid-area: 1 / 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-around; /* <-- FIX: Creates symmetrical vertical spacing */
+    justify-content: space-around; /* <-- FIX: Symmetrical Spacing */
     align-items: center;
     width: 100%;
     height: 100%;
@@ -187,7 +177,6 @@ input:checked + .slider:before { transform: translateX(24px); }
 /* --- MOBILE RESPONSIVE --- */
 @media (max-width: 900px) {
     body { overflow-y: auto; }
-    .app-container { padding: 0.5rem; height: auto; min-height: 100vh; }
     .main-content { padding: 1rem; }
     #big-clock-mode .time-display, 
     #stopwatch-mode .time-display { font-size: 12vw; }
