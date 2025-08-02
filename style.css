@@ -1,184 +1,200 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // --- Global State & Elements ---
-    const state = {
-        activeMode: 'big-clock-mode',
-        bigClock: {
-            intervalId: null,
-            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            is24Hour: false,
-        },
-        stopwatch: {
-            startTime: 0,
-            elapsedTime: 0,
-            animationFrameId: null,
-            isRunning: false,
-        }
-    };
+/* --- Base & Theme --- */
+:root {
+    --bg-color: #0a0a0a;
+    --primary-color: #00ff88;
+    --secondary-color: #70e1ff; /* 24hr mode color */
+    --text-color: #e0e0e0;
+    --font-display: 'Orbitron', sans-serif;
+    --font-mono: 'Roboto Mono', monospace;
+    --font-body: 'Roboto', sans-serif;
+    --transition-speed: 0.3s;
+}
 
-    const elements = {
-        body: document.body,
-        navTabs: document.querySelectorAll('.nav-tab:not(.disabled)'),
-        clockModes: document.querySelectorAll('.clock-mode'),
-        bigClockDisplay: document.querySelector('#big-clock-mode .time-display'),
-        dateDisplay: document.querySelector('#big-clock-mode .date-display'),
-        timezoneSelector: document.getElementById('timezone-selector'),
-        timeFormatToggle: document.getElementById('time-format-toggle'),
-        stopwatchDisplay: document.querySelector('#stopwatch-mode .time-display'),
-        startStopBtn: document.getElementById('start-stop-btn'),
-        resetBtn: document.getElementById('reset-btn'),
-        fullscreenBtn: document.getElementById('fullscreen-btn'),
-    };
+html { box-sizing: border-box; }
+*, *:before, *:after { box-sizing: inherit; }
 
-    // --- Mode Switching ---
-    function switchMode(modeId) {
-        if (state.activeMode === modeId) return;
-        
-        if (state.activeMode === 'big-clock-mode' && state.bigClock.intervalId) {
-            clearInterval(state.bigClock.intervalId);
-            state.bigClock.intervalId = null;
-        }
-        
-        state.activeMode = modeId;
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-body);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
 
-        elements.navTabs.forEach(tab => {
-            tab.classList.toggle('active', tab.dataset.mode === modeId);
-        });
+/* --- App Container & Ad Spaces --- */
+.app-container {
+    width: 100%;
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr;
+    padding: 1rem;
+    gap: 1rem;
+}
+.ad-placeholder {
+    height: 90px;
+    width: 100%;
+    max-width: 728px;
+    margin: 0 auto;
+}
 
-        elements.clockModes.forEach(mode => {
-            mode.classList.toggle('active', mode.id === modeId);
-        });
+/* --- Main Content Area --- */
+.main-content {
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+    border-radius: 15px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 1.5rem;
+    overflow: hidden;
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
-        if (modeId === 'big-clock-mode') {
-            initBigClock();
-        } else if (modeId === 'stopwatch-mode') {
-            updateStopwatchDisplay();
-        }
-    }
+/* --- Navigation Tabs --- */
+.nav-tabs {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+.nav-tab {
+    background-color: #2a2a2a;
+    color: var(--text-color);
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+.nav-tab.active {
+    background-color: var(--primary-color);
+    color: #000;
+    box-shadow: 0 0 15px var(--primary-color);
+}
+.nav-tab.disabled {
+    background-color: #1f1f1f;
+    color: #555;
+    cursor: not-allowed;
+}
 
-    // --- BIG CLOCK LOGIC ---
-    function updateBigClock() {
-        try {
-            const now = new Date();
-            const timeOptions = { 
-                timeZone: state.bigClock.timeZone, 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                second: '2-digit', 
-                hour12: !state.bigClock.is24Hour 
-            };
-            const dateOptions = { timeZone: state.bigClock.timeZone, weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+/* --- Clock Modes --- */
+.clock-modes-wrapper { display: grid; place-items: center; min-height: 0; }
+.clock-mode { 
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
+    padding: 1rem 0;
+}
+.clock-mode.active { opacity: 1; visibility: visible; }
 
-            elements.bigClockDisplay.textContent = now.toLocaleTimeString('en-US', timeOptions);
-            elements.dateDisplay.textContent = now.toLocaleDateString('en-US', dateOptions);
-        } catch (err) {
-            console.error("Error updating big clock:", err);
-            elements.bigClockDisplay.textContent = "Error";
-            if (state.bigClock.intervalId) clearInterval(state.bigClock.intervalId);
-        }
-    }
-    
-    function handleTimeFormatToggle() {
-        state.bigClock.is24Hour = elements.timeFormatToggle.checked;
-        elements.body.dataset.timeFormat = state.bigClock.is24Hour ? '24h' : '12h';
-        updateBigClock();
-    }
+/* BIG CLOCK MODE */
+#big-clock-mode .time-display {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 10vw, 5.5rem);
+    color: var(--primary-color);
+    text-shadow: 0 0 5px #fff, 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+    transition: color var(--transition-speed) ease, text-shadow var(--transition-speed) ease;
+    order: 2;
+}
+body[data-time-format="24h"] #big-clock-mode .time-display {
+    color: var(--secondary-color);
+    text-shadow: 0 0 5px #fff, 0 0 10px var(--secondary-color), 0 0 20px var(--secondary-color);
+}
+#big-clock-mode .date-display {
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    text-align: center;
+    order: 1;
+}
+.clock-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    order: 3;
+}
+#timezone-selector {
+    background-color: #2a2a2a;
+    color: var(--text-color);
+    border: 1px solid #444;
+    border-radius: 5px;
+    padding: 0.5rem;
+}
 
-    function populateTimezones() {
-        try {
-            const timezones = Intl.supportedValuesOf('timeZone');
-            timezones.forEach(tz => {
-                const option = document.createElement('option');
-                option.value = tz;
-                option.textContent = tz.replace(/_/g, ' ');
-                elements.timezoneSelector.appendChild(option);
-            });
-            elements.timezoneSelector.value = state.bigClock.timeZone;
-        } catch (e) {
-            console.error("Timezone population failed:", e);
-        }
-    }
+/* 12/24hr Toggle Switch */
+.toggle-switch-container { display: flex; align-items: center; gap: 0.5rem; }
+.toggle-switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 26px; }
+.slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: var(--secondary-color); }
+input:checked + .slider:before { transform: translateX(24px); }
 
-    function initBigClock() {
-        if (state.bigClock.intervalId) clearInterval(state.bigClock.intervalId);
-        updateBigClock();
-        state.bigClock.intervalId = setInterval(updateBigClock, 1000);
-    }
+/* STOPWATCH MODE */
+#stopwatch-mode .time-display {
+    font-family: var(--font-mono);
+    font-size: clamp(2rem, 10vw, 5.5rem);
+    color: var(--text-color);
+}
+#stopwatch-mode .time-display .milliseconds { font-size: 0.5em; color: #888; }
+.stopwatch-controls {
+    display: flex;
+    gap: 1rem;
+}
+.stopwatch-controls button {
+    font-size: 1.2rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+#start-stop-btn { background-color: #27ae60; color: white; }
+#reset-btn { background-color: #e74c3c; color: white; }
 
-    // --- STOPWATCH LOGIC ---
-    function formatStopwatchTime(ms) {
-        let totalSeconds = Math.floor(ms / 1000);
-        let hours = Math.floor(totalSeconds / 3600);
-        totalSeconds %= 3600;
-        let minutes = Math.floor(totalSeconds / 60);
-        let seconds = totalSeconds % 60;
-        let milliseconds = ms % 1000;
+/* --- Bottom Control Bar --- */
+.bottom-bar { display: flex; justify-content: center; gap: 1rem; padding-top: 1rem; }
+.control-btn {
+    background-color: #2a2a2a;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all var(--transition-speed) ease;
+}
+.control-btn:hover { background-color: var(--primary-color); color: #000; }
 
-        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}<span class="milliseconds">.${String(milliseconds).padStart(3, '0')}</span>`;
-    }
-
-    function updateStopwatchDisplay() {
-        const currentTime = state.stopwatch.isRunning 
-            ? Date.now() - state.stopwatch.startTime + state.stopwatch.elapsedTime 
-            : state.stopwatch.elapsedTime;
-        elements.stopwatchDisplay.innerHTML = formatStopwatchTime(currentTime);
-    }
-
-    function stopwatchLoop() {
-        if (!state.stopwatch.isRunning) return;
-        updateStopwatchDisplay();
-        state.stopwatch.animationFrameId = requestAnimationFrame(stopwatchLoop);
-    }
-
-    function startStopwatch() {
-        if (state.stopwatch.isRunning) { // STOP
-            state.stopwatch.isRunning = false;
-            cancelAnimationFrame(state.stopwatch.animationFrameId);
-            state.stopwatch.elapsedTime += Date.now() - state.stopwatch.startTime;
-            elements.startStopBtn.textContent = "START";
-        } else { // START
-            state.stopwatch.isRunning = true;
-            state.stopwatch.startTime = Date.now();
-            elements.startStopBtn.textContent = "STOP";
-            requestAnimationFrame(stopwatchLoop);
-        }
-    }
-
-    function resetStopwatch() {
-        if (state.stopwatch.isRunning) {
-            startStopwatch(); // Stop the clock first if it's running
-        }
-        state.stopwatch.elapsedTime = 0;
-        updateStopwatchDisplay();
-    }
-
-    // --- FULLSCREEN LOGIC ---
-    function toggleFullscreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(err => {
-                alert(`Error: ${err.message}`);
-            });
-        } else {
-            if (document.exitFullscreen) document.exitFullscreen();
-        }
-    }
-
-    // --- INITIALIZATION ---
-    function init() {
-        // Event Listeners
-        elements.navTabs.forEach(tab => tab.addEventListener('click', () => switchMode(tab.dataset.mode)));
-        elements.timezoneSelector.addEventListener('change', (e) => {
-            state.bigClock.timeZone = e.target.value;
-            initBigClock();
-        });
-        elements.timeFormatToggle.addEventListener('change', handleTimeFormatToggle);
-        elements.startStopBtn.addEventListener('click', startStopwatch);
-        elements.resetBtn.addEventListener('click', resetStopwatch);
-        elements.fullscreenBtn.addEventListener('click', toggleFullscreen);
-
-        // Initial Setup
-        populateTimezones();
-        initBigClock();
-    }
-
-    init();
-});
+/* --- MOBILE RESPONSIVE --- */
+@media (max-width: 900px) {
+    body { overflow-y: auto; }
+    .app-container { padding: 0.5rem; height: auto; min-height: 100vh; }
+    .main-content { padding: 1rem; }
+    #big-clock-mode .time-display, 
+    #stopwatch-mode .time-display { font-size: 12vw; }
+    #big-clock-mode .date-display { font-size: 4vw; }
+    .stopwatch-controls { flex-direction: column; width: 100%; align-items: center; }
+    .stopwatch-controls button { width: 80%; font-size: 1.2rem; padding: 1rem; }
+    .bottom-bar { flex-wrap: wrap; gap: 0.75rem; }
+    .control-btn { width: 50px; height: 50px; font-size: 1.5rem; }
+}
