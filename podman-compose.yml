@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  internet-clock:
+    build: .
+    container_name: internet-clock-app
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+      - PORT=80
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - internet-clock-network
+
+networks:
+  internet-clock-network:
+    driver: bridge
