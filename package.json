@@ -1,0 +1,32 @@
+{
+  "name": "internet-clock",
+  "version": "1.0.0",
+  "description": "A free, online tool providing the exact live time, a precision stopwatch, and world clock functionalities in a clean, user-friendly interface.",
+  "author": "Tysun M",
+  "license": "MIT",
+  "homepage": "https://internetclock.online",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TysunM/Internetclock.online.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TysunM/Internetclock.online/issues"
+  },
+  "keywords": [
+    "internet clock",
+    "online clock",
+    "live time",
+    "exact time",
+    "online stopwatch",
+    "world clock",
+    "time",
+    "clock",
+    "stopwatch"
+  ],
+  "scripts": {
+    "start": "echo \"No start script needed. Serve files directly with Nginx/Podman.\"",
+    "build": "echo \"No build step needed for this static project.\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "private": true
+}
