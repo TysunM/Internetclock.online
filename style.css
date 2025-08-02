@@ -91,9 +91,8 @@ body {
     grid-area: 1 / 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around; /* <-- FIX: Creates symmetrical vertical spacing */
     align-items: center;
-    gap: 1.5rem;
     width: 100%;
     height: 100%;
     opacity: 0;
