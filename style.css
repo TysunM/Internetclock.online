@@ -21,7 +21,7 @@ body {
     padding: 0;
     height: 100vh;
     width: 100vw;
-    display: grid; /* <-- Use grid on the body */
+    display: grid;
     grid-template-rows: auto 1fr auto; /* Header, Main, Footer */
     grid-template-columns: 1fr;
     overflow: hidden;
