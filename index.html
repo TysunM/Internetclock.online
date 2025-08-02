@@ -30,56 +30,54 @@
 </head>
 <body>
 
-    <div class="app-container">
-        <header class="ad-placeholder ad-top"></header>
+    <header class="ad-placeholder ad-top"></header>
 
-        <main class="main-content">
-            <nav class="nav-tabs">
-                <button class="nav-tab active" data-mode="big-clock-mode">BIG CLOCK</button>
-                <button class="nav-tab" data-mode="stopwatch-mode">STOP WATCH</button>
-                <button class="nav-tab disabled" title="Coming Soon!">WORLD CLOCK</button>
-                <button class="nav-tab disabled" title="Coming Soon!">FOCUS</button>
-                <button class="nav-tab disabled" title="Coming Soon!">ALARM CLOCK</button>
-                <button class="nav-tab disabled" title="Coming Soon!">TIMER</button>
-            </nav>
+    <main class="main-content">
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-mode="big-clock-mode">BIG CLOCK</button>
+            <button class="nav-tab" data-mode="stopwatch-mode">STOP WATCH</button>
+            <button class="nav-tab disabled" title="Coming Soon!">WORLD CLOCK</button>
+            <button class="nav-tab disabled" title="Coming Soon!">FOCUS</button>
+            <button class="nav-tab disabled" title="Coming Soon!">ALARM CLOCK</button>
+            <button class="nav-tab disabled" title="Coming Soon!">TIMER</button>
+        </nav>
 
-            <div class="clock-modes-wrapper">
-                <div id="big-clock-mode" class="clock-mode active">
-                    <h1 class="time-display">12:00:00 AM</h1>
-                    <div class="date-display">Thursday, July 31, 2025</div>
-                    <div class="clock-controls">
-                        <select id="timezone-selector"></select>
-                        <div class="toggle-switch-container">
-                            <span>12hr</span>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="time-format-toggle">
-                                <span class="slider"></span>
-                            </label>
-                            <span>24hr</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="stopwatch-mode" class="clock-mode">
-                    <div class="time-display">00:00:00<span class="milliseconds">.000</span></div>
-                    <div class="stopwatch-controls">
-                        <button id="start-stop-btn">START</button>
-                        <button id="reset-btn">RESET</button>
+        <div class="clock-modes-wrapper">
+            <div id="big-clock-mode" class="clock-mode active">
+                <div class="date-display">Thursday, July 31, 2025</div>
+                <h1 class="time-display">12:00:00 AM</h1>
+                <div class="clock-controls">
+                    <select id="timezone-selector"></select>
+                    <div class="toggle-switch-container">
+                        <span>12hr</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="time-format-toggle">
+                            <span class="slider"></span>
+                        </label>
+                        <span>24hr</span>
                     </div>
                 </div>
             </div>
 
-            <div class="bottom-bar">
-                <button class="control-btn" title="Settings">⚙️</button>
-                <button class="control-btn" title="Sound">🔊</button>
-                <button class="control-btn" title="Theme">🌓</button>
-                <button class="control-btn" title="Fullscreen" id="fullscreen-btn">⛶</button>
-                <button class="control-btn" title="Share">📤</button>
+            <div id="stopwatch-mode" class="clock-mode">
+                <div class="time-display">00:00:00<span class="milliseconds">.000</span></div>
+                <div class="stopwatch-controls">
+                    <button id="start-stop-btn">START</button>
+                    <button id="reset-btn">RESET</button>
+                </div>
             </div>
-        </main>
+        </div>
 
-        <footer class="ad-placeholder ad-bottom"></footer>
-    </div>
+        <div class="bottom-bar">
+            <button class="control-btn" title="Settings">⚙️</button>
+            <button class="control-btn" title="Sound">🔊</button>
+            <button class="control-btn" title="Theme">🌓</button>
+            <button class="control-btn" title="Fullscreen" id="fullscreen-btn">⛶</button>
+            <button class="control-btn" title="Share">📤</button>
+        </div>
+    </main>
+
+    <footer class="ad-placeholder ad-bottom"></footer>
 
     <script src="app.js"></script>
 </body>
