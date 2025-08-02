@@ -1,84 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+import express, { type Request, Response, NextFunction } from "express";
+import { registerRoutes } from "./routes";
+import { setupVite, serveStatic, log } from "./vite";
 
-    <!-- SEO Meta Tags -->
-    <title>Internet Clock - Live Time, Online Stopwatch & World Clock</title>
-    <meta name="description" content="The official Internet Clock. Get the exact live time with our full-screen big clock, use the precision online stopwatch, and check time zones from around the world.">
-    
-    <!-- Links -->
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-    <!-- JSON-LD Structured Data for SEO -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Internet Clock",
-      "url": "http://internetclock.online",
-      "description": "A free, online tool providing the exact live time and a precision stopwatch."
+app.use((req, res, next) => {
+  const start = Date.now();
+  const path = req.path;
+  let capturedJsonResponse: Record<string, any> | undefined = undefined;
+
+  const originalResJson = res.json;
+  res.json = function (bodyJson, ...args) {
+    capturedJsonResponse = bodyJson;
+    return originalResJson.apply(res, [bodyJson, ...args]);
+  };
+
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    if (path.startsWith("/api")) {
+      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
+      if (capturedJsonResponse) {
+        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+      }
+
+      if (logLine.length > 80) {
+        logLine = logLine.slice(0, 79) + "…";
+      }
+
+      log(logLine);
     }
-    </script>
-    
-    <!-- PASTE YOUR GOOGLE ADSENSE AUTO ADS SCRIPT HERE -->
+  });
 
-</head>
-<body>
+  next();
+});
 
-    <header class="ad-placeholder ad-top"></header>
+// Health check endpoint for container monitoring
+app.get('/health', (req: Request, res: Response) => {
+  res.status(200).json({ 
+    status: 'healthy', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    version: '1.0.0'
+  });
+});
 
-    <main class="main-content">
-        <nav class="nav-tabs">
-            <button class="nav-tab active" data-mode="big-clock-mode">BIG CLOCK</button>
-            <button class="nav-tab" data-mode="stopwatch-mode">STOP WATCH</button>
-            <button class="nav-tab disabled" title="Coming Soon!">WORLD CLOCK</button>
-            <button class="nav-tab disabled" title="Coming Soon!">FOCUS</button>
-            <button class="nav-tab disabled" title="Coming Soon!">ALARM CLOCK</button>
-            <button class="nav-tab disabled" title="Coming Soon!">TIMER</button>
-        </nav>
+(async () => {
+  const server = await registerRoutes(app);
 
-        <div class="clock-modes-wrapper">
-            <div id="big-clock-mode" class="clock-mode active">
-                <div class="date-display">Thursday, July 31, 2025</div>
-                <h1 class="time-display">12:00:00 AM</h1>
-                <div class="clock-controls">
-                    <select id="timezone-selector"></select>
-                    <div class="toggle-switch-container">
-                        <span>12hr</span>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="time-format-toggle">
-                            <span class="slider"></span>
-                        </label>
-                        <span>24hr</span>
-                    </div>
-                </div>
-            </div>
+  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+    const status = err.status || err.statusCode || 500;
+    const message = err.message || "Internal Server Error";
 
-            <div id="stopwatch-mode" class="clock-mode">
-                <div class="time-display">00:00:00<span class="milliseconds">.000</span></div>
-                <div class="stopwatch-controls">
-                    <button id="start-stop-btn">START</button>
-                    <button id="reset-btn">RESET</button>
-                </div>
-            </div>
-        </div>
+    res.status(status).json({ message });
+    throw err;
+  });
 
-        <div class="bottom-bar">
-            <button class="control-btn" title="Settings">⚙️</button>
-            <button class="control-btn" title="Sound">🔊</button>
-            <button class="control-btn" title="Theme">🌓</button>
-            <button class="control-btn" title="Fullscreen" id="fullscreen-btn">⛶</button>
-            <button class="control-btn" title="Share">📤</button>
-        </div>
-    </main>
+  // importantly only setup vite in development and after
+  // setting up all the other routes so the catch-all route
+  // doesn't interfere with the other routes
+  if (app.get("env") === "development") {
+    await setupVite(app, server);
+  } else {
+    serveStatic(app);
+  }
 
-    <footer class="ad-placeholder ad-bottom"></footer>
-
-    <script src="app.js"></script>
-</body>
-</html>
+  // ALWAYS serve the app on the port specified in the environment variable PORT
+  // Other ports are firewalled. Default to 80 if not specified.
+  // this serves both the API and the client.
+  // It is the only port that is not firewalled.
+  const port = parseInt(process.env.PORT || '80', 10);
+  server.listen({
+    port,
+    host: "0.0.0.0",
+    reusePort: true,
+  }, () => {
+    log(`serving on port ${port}`);
+  });
+})();
