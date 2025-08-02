@@ -1,18 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Meta Tags -->
     <title>Internet Clock - Live Time, Online Stopwatch & World Clock</title>
-    <meta name="description" content="The official Internet Clock. Get the exact live time with our full-screen big clock, use the precision online stopwatch, and check time zones from around the world." />
-    <link rel="stylesheet" href="style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+    <meta name="description" content="The official Internet Clock. Get the exact live time with our full-screen big clock, use the precision online stopwatch, and check time zones from around the world.">
+    
+    <!-- Links -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- JSON-LD Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Internet Clock",
+      "url": "http://internetclock.online",
+      "description": "A free, online tool providing the exact live time and a precision stopwatch."
+    }
+    </script>
+    
+    <!-- PASTE YOUR GOOGLE ADSENSE AUTO ADS SCRIPT HERE -->
+
 </head>
 <body>
+
     <div class="app-container">
         <header class="ad-placeholder ad-top"></header>
+
         <main class="main-content">
             <nav class="nav-tabs">
                 <button class="nav-tab active" data-mode="big-clock-mode">BIG CLOCK</button>
@@ -25,14 +45,14 @@
 
             <div class="clock-modes-wrapper">
                 <div id="big-clock-mode" class="clock-mode active">
-                    <div class="date-display">Thursday, July 31, 2025</div>
                     <h1 class="time-display">12:00:00 AM</h1>
+                    <div class="date-display">Thursday, July 31, 2025</div>
                     <div class="clock-controls">
                         <select id="timezone-selector"></select>
                         <div class="toggle-switch-container">
                             <span>12hr</span>
                             <label class="toggle-switch">
-                                <input type="checkbox" id="time-format-toggle" />
+                                <input type="checkbox" id="time-format-toggle">
                                 <span class="slider"></span>
                             </label>
                             <span>24hr</span>
@@ -44,9 +64,8 @@
                     <div class="time-display">00:00:00<span class="milliseconds">.000</span></div>
                     <div class="stopwatch-controls">
                         <button id="start-stop-btn">START</button>
-                        <button id="lap-reset-btn">RESET</button>
+                        <button id="reset-btn">RESET</button>
                     </div>
-                    <div id="laps-container" style="margin-top: 1rem; text-align: left; max-height: 200px; overflow-y: auto; font-family: var(--font-mono);"></div>
                 </div>
             </div>
 
@@ -58,8 +77,10 @@
                 <button class="control-btn" title="Share">📤</button>
             </div>
         </main>
+
         <footer class="ad-placeholder ad-bottom"></footer>
     </div>
+
     <script src="app.js"></script>
 </body>
 </html>
