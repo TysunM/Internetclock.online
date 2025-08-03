@@ -11,8 +11,7 @@ COPY tailwind.config.ts ./
 COPY postcss.config.js ./
 
 # Install dependencies
-RUN npm ci --only=production
-
+RUN npm ci
 # Copy source code
 COPY client/ ./client/
 COPY server/ ./server/
@@ -28,7 +27,7 @@ WORKDIR /app
 
 # Install only production dependencies
 COPY package*.json ./
-RUN npm ci --only=production && npm cache clean --force
+RUN npm ci
 
 # Copy built application
 COPY --from=builder /app/dist ./dist
