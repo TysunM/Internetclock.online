@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Plus, Trash2, Bell, BellOff } from 'lucide-react';
 import { Button } from '@/components/ui/button.tsx';
 import { Input } from '@/components/ui/input.tsx';
-import { Label } from '@/components/ui/.tsx';
+import { Label } from '@/components/ui/label.tsx';
 
 interface Alarm {
   id: string;
