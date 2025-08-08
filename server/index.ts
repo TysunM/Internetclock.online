@@ -34,8 +34,8 @@ app.use((req, res, next) => {
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
+      if (logLine.length > 8080) {
+        logLine = logLine.slice(0, 8079) + "…";
       }
       log(logLine);
     }
@@ -80,7 +80,7 @@ app.get('/health', (req: Request, res: Response) => {
   }
 
   // --- START SERVER ---
-  const port = process.env.PORT || 80;
+  const port = process.env.PORT || 8080;
   server.listen({
     port,
     host: "0.0.0.0",
