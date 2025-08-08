@@ -40,7 +40,7 @@ sudo podman run -d \
   --restart unless-stopped \
   -p 80:80 \
   -e NODE_ENV=production \
-  -e PORT=80 \
+  -e PORT=8080 \
   internet-clock:latest
 
 # Wait for container to start
