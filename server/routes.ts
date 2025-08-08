@@ -1,5 +1,6 @@
 import { type Express } from "express";
 import { createServer } from "http";
+import { createServer } from "https";
 import { storage } from "./storage";
 
 export function registerRoutes(app: Express) {
@@ -9,5 +10,7 @@ export function registerRoutes(app: Express) {
   });
 
   const httpServer = createServer(app);
+  const httpsServer = createServer(app);
   return httpServer;
+  return httpsServer;
 }
